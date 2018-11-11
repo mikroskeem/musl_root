@@ -13,6 +13,23 @@ set -e
 root_dir="$(pwd)"
 current_stage=""
 
+# Build tools if necessary
+if [ ! -d "${root_dir}/tools" ]; then
+    echo ">>> Building tools"
+    . stages/tools/build.sh
+
+    cd "${root_dir}"
+    echo ">>> Copying built stage"
+    fakeroot tar -C "${target_dir}" -cf - . \
+        > stages/tools/finished.tar
+
+    echo ">>> tools built"
+
+    # Now unpack tools
+    mkdir -p "${root_dir}/tools"
+    tar -C "/" -xf stages/tools/finished.tar
+fi
+
 if should_build_stage "stage0" "${stages}"; then
     echo ">>> Building stage0"
     . stages/stage0/build.sh
