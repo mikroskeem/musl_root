@@ -1,0 +1,31 @@
+From 5d6f8c1b38bec8876440723adf8a784ea1c1afbb Mon Sep 17 00:00:00 2001
+From: Mark Vainomaa <mikroskeem@mikroskeem.eu>
+Date: Sun, 11 Nov 2018 14:16:46 +0200
+Subject: [PATCH] Fix compiler warnings about missing parentheses
+
+---
+ include/endian.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/endian.h b/include/endian.h
+index 1bd44451..5d7382f0 100644
+--- a/include/endian.h
++++ b/include/endian.h
+@@ -29,12 +29,12 @@ static __inline uint16_t __bswap16(uint16_t __x)
+ 
+ static __inline uint32_t __bswap32(uint32_t __x)
+ {
+-	return __x>>24 | __x>>8&0xff00 | __x<<8&0xff0000 | __x<<24;
++	return __x>>24 | ((__x>>8)&0xff00) | ((__x<<8)&0xff0000) | __x<<24;
+ }
+ 
+ static __inline uint64_t __bswap64(uint64_t __x)
+ {
+-	return __bswap32(__x)+0ULL<<32 | __bswap32(__x>>32);
++	return (__bswap32(__x)+(0ULL<<32)) | __bswap32(__x>>32);
+ }
+ 
+ #if __BYTE_ORDER == __LITTLE_ENDIAN
+-- 
+2.19.1
+

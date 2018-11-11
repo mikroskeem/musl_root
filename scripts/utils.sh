@@ -50,13 +50,13 @@ unpack () {
 }
 
 apply_patches () {
-    local name="$(basename "${2}")"
-    name="${name%%.*}"
+    local name="$(basename "${1}")"
+    name="${name%%.tar*}"
 
     if [ -d "${patches}/${name}" ]; then
         echo ">>> Applying patches for '${name}'"
         find "${patches}/${name}" -mindepth 1 -maxdepth 1 -name "*.patch" | while read -r _p; do
-            patch < "${_p}" || return "${?}"
+            patch -p1 < "${_p}" || return "${?}"
         done
     fi
 }
