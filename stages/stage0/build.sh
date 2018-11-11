@@ -40,16 +40,21 @@ fetch "${pkg_config_url}"
     cd busybox-"${busybox_version}"
     apply_patches "${busybox_url}"
 
-    make defconfig
+    make CC="${tools_dir}/bin/musl-gcc" defconfig
+
+    sed -i '/CONFIG_STATIC/{s/.*/CONFIG_STATIC=y/}' .config
 
     # Ehh...
     sed -i '/^CONFIG_AR=/{s/=y/=n/g}' .config
     sed -i '/^CONFIG_DPKG.*=/{s/=y/=n/g}' .config
-    sed -i '/^CONFIG_I2C.*=/{s/=y/=n/g}' .config
-    sed -i '/^CONFIG_MKFS.*=/{s/=y/=n/g}' .config
     sed -i '/^CONFIG_FSCK.*=/{s/=y/=n/g}' .config
+    sed -i '/^CONFIG_I2C.*=/{s/=y/=n/g}' .config
+    sed -i '/^CONFIG_MK.*FS.*=/{s/=y/=n/g}' .config
+    sed -i '/^CONFIG_NAND.*=/{s/=y/=n/g}' .config
+    sed -i '/^CONFIG_SV.*=/{s/=y/=n/g}' .config
+    sed -i '/^CONFIG_UBI.*=/{s/=y/=n/g}' .config
 
-    make
+    make CC="${tools_dir}/bin/musl-gcc"
 
     # Install busybox by hand
     mkdir -p "${target_dir}"/tools/bin
