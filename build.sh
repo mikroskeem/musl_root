@@ -28,7 +28,9 @@ if [ ! -d "${tools_dir}" ]; then
 
     # Now unpack tools
     mkdir -p "${tools_dir}"
-    tar -C "/" -xf stages/tools/finished.tar
+
+    transform="$(printf "%s" "${tools_dir}" | sed 's#/##')"
+    tar -C "${tools_dir}" --transform="s#${transform}##" -xf stages/tools/finished.tar
 fi
 
 if should_build_stage "stage0" "${stages}"; then
