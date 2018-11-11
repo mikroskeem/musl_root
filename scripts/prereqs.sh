@@ -36,3 +36,8 @@ check_command "make" || exit 1
 check_command "pkg-config" || exit 1
 check_command "libtool" || exit 1
 check_command "fakeroot" || exit 1
+
+check_command "xz" || {
+    echo "Disabling compression, xz not found in PATH=${PATH}"
+    compress_stages=NO
+}

@@ -21,56 +21,41 @@ if [ ! -d "${tools_dir}" ]; then
 
     cd "${root_dir}"
     echo ">>> Copying built stage"
-    fakeroot tar -C "${target_dir}" -cf - . \
-        > stages/tools/finished.tar
+    copy_stage
 
     echo ">>> tools built"
 
     # Now unpack tools
     mkdir -p "${tools_dir}"
-
     transform="$(printf "%s" "${tools_dir}" | sed 's#/##')"
-    tar -C "${tools_dir}" --transform="s#${transform}##" -xf stages/tools/finished.tar
+    tar -C "${tools_dir}" --transform="s#${transform}##" -xf "$(get_stage_archive "tools")"
 fi
 
-if should_build_stage "stage0" "${stages}"; then
+if should_build_stage "stage0"; then
     echo ">>> Building stage0"
     . stages/stage0/build.sh
 
     cd "${root_dir}"
-    stage_built "stage0"
-
-    echo ">>> Copying built stage"
-    fakeroot tar -C "${target_dir}" -cf - . \
-        > stages/stage0/finished.tar
-
-    echo ">>> stage0 built"
+    copy_stage || return 1
+    stage_built
 fi
 
 exit 0
 
-if should_build_stage "stage1" "${stages}"; then
+if should_build_stage "stage1"; then
     echo ">>> Building stage1"
     . stages/stage1/build.sh
 
     cd "${root_dir}"
-    stage_built "stage1"
-
-    echo ">>> Copying built stage"
-    fakeroot tar -C "${target_dir}" -cf - . \
-        > stages/stage1/finished.tar
-
-    echo ">>> stage1 built"
+    copy_stage || return 1
+    stage_built
 fi
 
-if should_build_stage "stage2" "${stages}"; then
+if should_build_stage "stage2"; then
     echo ">>> Building stage2"
     . stages/stage2/build.sh
-    stage_built "stage2"
 
-    echo ">>> Copying built stage"
-    fakeroot tar -C "${target_dir}" -cf - . \
-        > stages/stage2/finished.tar
-
-    echo ">>> stage2 built"
+    cd "${root_dir}"
+    copy_stage || return 1
+    stage_built
 fi
