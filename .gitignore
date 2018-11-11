@@ -1,0 +1,4 @@
+tmp/
+stages/built.txt
+stages/*/finished.tar
+sources/
