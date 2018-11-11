@@ -11,7 +11,7 @@ fetch "${musl_url}"
 
 # Build musl
 {
-    build_dir="$(create_tmp "musl")"
+    build_dir="$(create_tmp "host-musl")"
     cd "${build_dir}"
 
     unpack "${build_dir}" "${musl_url}"
@@ -25,5 +25,5 @@ fetch "${musl_url}"
         --enable-wrapper=gcc
 
     make
-    make install
+    make DESTDIR="${target_dir}" install
 }
