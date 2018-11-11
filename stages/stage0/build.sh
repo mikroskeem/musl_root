@@ -71,7 +71,7 @@ fetch "${pkg_config_url}"
 
     mkdirp build
 
-    CC="${CC:-cc} -static" ../configure \
+    CC="${tools_dir}/bin/musl-gcc -static" ../configure \
         --prefix=/tools \
         --without-guile
 
@@ -90,7 +90,7 @@ fetch "${pkg_config_url}"
 
     mkdirp build
 
-    CC="${CC:-cc} -static" ../configure \
+    CC="${tools_dir}/bin/musl-gcc -static" ../configure \
         --prefix=/tools
 
     make
@@ -108,7 +108,7 @@ fetch "${pkg_config_url}"
 
     mkdirp build
 
-    CC="${CC:-cc} -static" ../configure \
+    CC="${tools_dir}/bin/musl-gcc -static" ../configure \
         --prefix=/tools \
         --with-internal-glib
 

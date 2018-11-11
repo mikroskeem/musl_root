@@ -11,10 +11,11 @@ set -e
 . scripts/utils.sh
 
 root_dir="$(pwd)"
+tools_dir="${root_dir}/tools"
 current_stage=""
 
 # Build tools if necessary
-if [ ! -d "${root_dir}/tools" ]; then
+if [ ! -d "${tools_dir}" ]; then
     echo ">>> Building tools"
     . stages/tools/build.sh
 
@@ -26,7 +27,7 @@ if [ ! -d "${root_dir}/tools" ]; then
     echo ">>> tools built"
 
     # Now unpack tools
-    mkdir -p "${root_dir}/tools"
+    mkdir -p "${tools_dir}"
     tar -C "/" -xf stages/tools/finished.tar
 fi
 
