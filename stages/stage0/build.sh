@@ -55,7 +55,7 @@ fetch "${pkg_config_url}"
     mkdir -p "${target_dir}"/tools/bin
     cp busybox "${target_dir}"/tools/bin
 
-    for applet in $(busybox --list); do
+    for applet in $(./busybox --list); do
         ln -s busybox "${target_dir}"/usr/bin/"${applet}" || true
     done
 }
