@@ -27,7 +27,7 @@ fetch () {
 
     if [ -z "${_dl_tool}" ]; then
         if [ ! -z "$(command -v curl)" ]; then
-            _dl_tool='curl -o ${file} ${1}'
+            _dl_tool='curl -L -o ${file} ${1}'
         elif [ ! -z "$(command -v aria2c)" ]; then
             _dl_tool='aria2 -o ${file} ${1}'
         elif [ ! -z "$(command -v wget)" ]; then
