@@ -37,8 +37,20 @@ get_stage_archive () {
     local stagename="${1}"
 
     if [ "${compress_stages}" = "YES" ]; then
-        printf "%s" "${root_dir}/stages/${stagename}/finished.tar.xz"
+        printf "%s" "${stages_dir}/${stagename}/finished.tar.xz"
     else
-        echo "%s" "${root_dir}/stages/${stagename}/finished.tar"
+        echo "%s" "${stages_dir}/${stagename}/finished.tar"
     fi
+}
+
+should_build_package () {
+    local f="${stages_dir}/${current_stage}/built_packages.txt"
+
+    ! grep -q "${1}" "${f}"
+    return "${?}"
+}
+
+package_built () {
+    local f="${stages_dir}/${current_stage}/built_packages.txt"
+    echo "${1}" >> "${f}"
 }

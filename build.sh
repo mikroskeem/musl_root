@@ -12,6 +12,7 @@ set -e
 
 root_dir="$(pwd)"
 tools_dir="${root_dir}/tools"
+stages_dir="${root_dir}/stages"
 current_stage=""
 
 # Build tools if necessary
