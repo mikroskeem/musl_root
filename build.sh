@@ -6,13 +6,14 @@ set -e
 . scripts/config_init.sh
 . scripts/prereqs.sh
 . scripts/sources.sh
-. scripts/cli.sh
 . scripts/stages.sh
 . scripts/utils.sh
 
 root_dir="$(pwd)"
 tools_dir="${root_dir}/tools"
 current_stage=""
+
+. scripts/cli.sh
 
 # Build tools if necessary
 if [ ! -d "${tools_dir}" ]; then
