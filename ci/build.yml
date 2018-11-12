@@ -9,7 +9,7 @@ image_resource:
     tag: "8.2.0"
 
 inputs:
-- musl_root
+- name: musl_root
 
 run:
   path: musl_root/ci/build.sh
