@@ -30,6 +30,9 @@ if [ ! -d "${tools_dir}" ]; then
     tar -C "${tools_dir}" --transform="s#${transform}##" -xf "$(get_stage_archive "tools")"
 fi
 
+_oldpath="${PATH}"
+export PATH="${tools_dir}/bin:${PATH}"
+
 if should_build_stage "stage0"; then
     echo ">>> Building stage0"
     . stages/stage0/build.sh
