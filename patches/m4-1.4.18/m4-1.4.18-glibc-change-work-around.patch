@@ -1,3 +1,6 @@
+!quirk: build_own_m4
+!quirk: too_new_glibc
+
 diff -up m4-1.4.18/lib/fflush.c.orig m4-1.4.18/lib/fflush.c
 --- m4-1.4.18/lib/fflush.c.orig	2018-05-02 12:35:59.536851666 +0200
 +++ m4-1.4.18/lib/fflush.c	2018-05-02 12:37:02.768958606 +0200

@@ -51,12 +51,28 @@ unpack () {
 
 apply_patches () {
     local name="$(basename "${1}")"
+    local quirks=""
+    local _should_apply=""
     name="${name%%.tar*}"
 
     if [ -d "${patches}/${name}" ]; then
         echo ">>> Applying patches for '${name}'"
         find "${patches}/${name}" -mindepth 1 -maxdepth 1 -name "*.patch" | while read -r _p; do
-            patch -p1 < "${_p}" || return "${?}"
+            # Check if patch should be applied
+            quirks="$((grep '^!quirk: ' "${_p}" | sed '/^!quirk: /{s///g}') || true)"
+            _should_apply="YES"
+
+            for quirk in ${quirks}; do
+                if ! (printf "%s" "${host_quirks}" | grep -q "${quirk}"); then
+                    _should_apply=""
+                    break
+                fi
+            done
+
+            if [ "${_should_apply}" = "YES" ]; then
+                echo ">>> Applying patch: $(basename "${_p}")"
+                patch -p1 < "${_p}" || return "${?}"
+            fi
         done
     fi
 }

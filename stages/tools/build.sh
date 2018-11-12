@@ -43,7 +43,7 @@ fetch "${m4_url}"
 }
 
 # Build m4
-{
+if (printf "%s" "${host_quirks}" | grep -q "build_own_m4"); then
     build_dir="$(create_tmp "host-m4")"
     cd "${build_dir}"
 
@@ -57,4 +57,4 @@ fetch "${m4_url}"
 
     make
     make DESTDIR="${target_dir}" install
-}
+fi
