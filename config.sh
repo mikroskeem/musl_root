@@ -24,6 +24,6 @@ compress_stages=YES
 use_tmp=YES
 
 # Compiler/build tool flags
-export MAKEFLAGS="-j$(grep -c ^processor /proc/cpuinfo)"
+export MAKEFLAGS="-j$(grep -c ^processor /proc/cpuinfo || printf "%s" "1")"
 export CFLAGS="-fstack-protector-strong"
 export XZ_FLAGS="-vvv"
