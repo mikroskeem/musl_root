@@ -5,8 +5,8 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: gcc
-    tag: "8.2.0"
+    repository: quay.io/mikroskeem/ubuntu-devel
+    tag: "ubuntu_18.04_vanilla"
 
 inputs:
 - name: musl_root
