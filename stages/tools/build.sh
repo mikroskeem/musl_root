@@ -27,3 +27,15 @@ fetch "${musl_url}"
     make
     make DESTDIR="${target_dir}" install
 }
+
+# Build kernel headers
+{
+    build_dir="$(create_tmp "host-kernel-headers")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${sabotage_kernel_headers_url}"
+    cd kernel-headers-"${sabotage_kernel_headers_version}"
+    apply_patches "${sabotage_kernel_headers_url}"
+
+    make ARCH="$(uname -m)" prefix="${root_dir}/tools" DESTDIR="${target_dir}" install
+}
