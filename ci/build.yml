@@ -8,5 +8,8 @@ image_resource:
     repository: gcc
     tag: "8.2.0"
 
+inputs:
+- musl_root
+
 run:
   path: musl_root/ci/build.sh
