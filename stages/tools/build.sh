@@ -9,6 +9,7 @@ target_dir="$(create_build_tmp)"
 # Fetch sources
 fetch "${musl_url}"
 fetch "${sabotage_kernel_headers_url}"
+fetch "${m4_url}"
 
 # Build musl
 {
@@ -39,4 +40,21 @@ fetch "${sabotage_kernel_headers_url}"
     apply_patches "${sabotage_kernel_headers_url}"
 
     make ARCH="$(uname -m)" prefix="${root_dir}/tools" DESTDIR="${target_dir}" install
+}
+
+# Build m4
+{
+    build_dir="$(create_tmp "host-m4")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${m4_url}"
+    cd mu4-"${m4_version}"
+    apply_patches "${m4_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix="${root_dir}/tools"
+
+    make
+    make DESTDIR="${target_dir}" install
 }
