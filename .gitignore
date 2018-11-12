@@ -1,5 +1,5 @@
 tmp/
 stages/built.txt
-stages/*/finished.tar
+stages/*/finished.tar*
 sources/
 tools/
