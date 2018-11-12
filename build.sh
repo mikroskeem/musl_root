@@ -20,7 +20,6 @@ if [ ! -d "${tools_dir}" ]; then
     . stages/tools/build.sh
 
     cd "${root_dir}"
-    echo ">>> Copying built stage"
     copy_stage
 
     echo ">>> tools built"
