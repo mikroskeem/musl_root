@@ -20,7 +20,7 @@ stage_built () {
 copy_stage () {
     echo ">>> Copying built stage"
 
-    local _xz="xz ${XZ_FLAGS}"
+    _xz="xz ${XZ_FLAGS}"
     if [ "${compress_stages}" = "YES" ]; then
         fakeroot tar -C "${target_dir}" -cf - . \
             | ${_xz} -c \
@@ -34,7 +34,7 @@ copy_stage () {
 }
 
 get_stage_archive () {
-    local stagename="${1}"
+    stagename="${1}"
 
     if [ "${compress_stages}" = "YES" ]; then
         printf "%s" "${root_dir}/stages/${stagename}/finished.tar.xz"

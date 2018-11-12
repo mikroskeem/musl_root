@@ -12,10 +12,10 @@ check_command () {
 }
 
 _run_native () {
-    local required="${1}"
-    local _check="$(mktemp /tmp/muslroot-hosttest.XXXX.c)"
-    local _check_log="${_check}.log"
-    local _out=""
+    required="${1}"
+    _check="$(mktemp /tmp/muslroot-hosttest.XXXX.c)"
+    _check_log="${_check}.log"
+    _out=""
 
     set +e
 

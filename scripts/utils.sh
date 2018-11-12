@@ -19,8 +19,8 @@ create_tmp () {
 # source
 _dl_tool=""
 fetch () {
-    local name="$(basename "${1}")"
-    local file="${sources}/${name}"
+    name="$(basename "${1}")"
+    file="${sources}/${name}"
     if [ -f "${file}" ]; then
         return 0
     fi
@@ -42,17 +42,17 @@ fetch () {
 
 # target dir, package
 unpack () {
-    local name="$(basename "${2}")"
-    local file="${sources}/${name}"
+    name="$(basename "${2}")"
+    file="${sources}/${name}"
 
     echo ">>> Unpacking '${name}'"
     tar -C "${1}" -xf "${file}" || return "${?}"
 }
 
 apply_patches () {
-    local name="$(basename "${1}")"
-    local quirks=""
-    local _should_apply=""
+    name="$(basename "${1}")"
+    quirks=""
+    _should_apply=""
     name="${name%%.tar*}"
 
     if [ -d "${patches}/${name}" ]; then
