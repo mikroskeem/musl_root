@@ -1,0 +1,16 @@
+---
+
+resources:
+- name: musl_root
+  type: git
+  source:
+    uri: "https://github.com/mikroskeem/musl_root.git"
+    branch: concourse
+
+jobs:
+- name: build-musl-root
+  plan:
+  - get: musl_root
+    trigger: true
+  - task: build
+    file: musl_root/ci/build.yml
