@@ -8,6 +8,7 @@ target_dir="$(create_build_tmp)"
 
 # Fetch sources
 fetch "${musl_url}"
+fetch "${sabotage_kernel_headers_url}"
 
 # Build musl
 {
