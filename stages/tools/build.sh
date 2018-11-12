@@ -48,7 +48,7 @@ fetch "${m4_url}"
     cd "${build_dir}"
 
     unpack "${build_dir}" "${m4_url}"
-    cd mu4-"${m4_version}"
+    cd m4-"${m4_version}"
     apply_patches "${m4_url}"
 
     mkdirp build
