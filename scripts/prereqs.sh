@@ -13,11 +13,6 @@ check_command () {
 
 echo ">>> Checking available host tools..."
 
-check_command "musl-gcc" s || (
-    echo "musl-gcc is required for building right now"
-    exit 1
-);
-
 check_command "basename"
 check_command "grep"
 check_command "sed"
