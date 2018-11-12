@@ -1,3 +1,5 @@
+Source: http://web.archive.org/web/20181112231257/https://git.archlinux.org/svntogit/packages.git/tree/trunk/m4-1.4.18-glibc-change-work-around.patch?h=packages/m4
+
 !quirk: build_own_m4
 !quirk: too_new_glibc
 
