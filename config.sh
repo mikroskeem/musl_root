@@ -2,6 +2,8 @@
 # Script to configure builder
 #
 
+# shellcheck disable=SC2155
+
 # Sources directory
 sources="./sources"
 

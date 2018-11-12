@@ -44,6 +44,7 @@ if should_build_stage "stage0"; then
 fi
 
 exit 0
+export PATH="${_oldpath}"
 
 if should_build_stage "stage1"; then
     echo ">>> Building stage1"

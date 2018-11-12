@@ -18,6 +18,8 @@ create_tmp () {
 
 # source
 _dl_tool=""
+
+# shellcheck disable=SC2016
 fetch () {
     name="$(basename "${1}")"
     file="${sources}/${name}"
