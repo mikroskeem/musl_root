@@ -1,5 +1,5 @@
-tmp/
-stages/built.txt
-stages/*/finished.tar*
-sources/
-tools/
+/tmp/
+/stages/built.txt
+/stages/*/finished.tar*
+/sources/
+/tools/
