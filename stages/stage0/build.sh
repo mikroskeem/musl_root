@@ -24,6 +24,28 @@ if has_quirk "no_kernel_headers"; then
     _cc="${_cc} -isystem \"${tools_dir}/include\""
 fi
 
+# Set up base filesystem
+{
+    install -d "${target_dir}"/dev
+    install -d "${target_dir}"/proc
+    install -d "${target_dir}"/sys
+
+    install -d "${target_dir}"/etc
+
+    install -d "${target_dir}"/usr
+    install -d "${target_dir}"/usr/bin
+    install -d "${target_dir}"/usr/sbin
+    install -d "${target_dir}"/usr/lib
+
+    ln -s usr/bin "${target_dir}"/bin
+    ln -s usr/bin "${target_dir}"/sbin
+    ln -s usr/bin "${target_dir}"/usr/sbin
+    ln -s usr/lib "${target_dir}"/lib
+
+    # Symlink busybox sh as default shell
+    ln -s /tools/bin/busybox "${target_dir}"/usr/bin/sh
+}
+
 # Build musl
 {
     build_dir="$(create_tmp "musl")"
