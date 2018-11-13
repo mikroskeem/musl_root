@@ -7,6 +7,7 @@ build_dir=""
 target_dir="${root_dir}/tools"
 
 # Fetch sources
+fetch "${libtool_url}"
 fetch "${musl_url}"
 fetch "${sabotage_kernel_headers_url}"
 fetch "${m4_url}"
@@ -57,6 +58,24 @@ if (printf "%s" "${host_quirks}" | grep -q "build_own_m4"); then
 
     make
     make install
+fi
+
+# Build libtool
+if (printf "%s" "${host_quirks}" | grep -q "build_own_libtool"); then
+    build_dir="$(create_tmp "host-libtool")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${libtool_url}"
+    cd libtool-"${libtool_version}"
+    apply_patches "${libtool_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix="${root_dir}/tools" \
+
+
+    make
+    make DESTDIR="${target_dir}" install
 fi
 
 # Mark stage finished
