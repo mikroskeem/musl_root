@@ -14,6 +14,12 @@ fetch "${libtool_url}"
 fetch "${pkg_config_url}"
 fetch "${sabotage_kernel_headers_url}"
 
+# Use musl-gcc if needed
+_cc="${CC:-cc}"
+if (printf "%s" "${host_quirks}" | grep -q "build_musl_gcc_wrapper"); then
+    _cc="${tools_dir}/bin/musl-gcc"
+fi
+
 # Build musl
 {
     build_dir="$(create_tmp "musl")"
@@ -41,7 +47,7 @@ fetch "${sabotage_kernel_headers_url}"
     cd busybox-"${busybox_version}"
     apply_patches "${busybox_url}"
 
-    make CC="${tools_dir}/bin/musl-gcc" defconfig
+    make CC="${_cc}" defconfig
 
     sed -i '/CONFIG_STATIC/{s/.*/CONFIG_STATIC=y/}' .config
 
@@ -55,7 +61,7 @@ fetch "${sabotage_kernel_headers_url}"
     sed -i '/^CONFIG_SV.*=/{s/=y/=n/g}' .config
     sed -i '/^CONFIG_UBI.*=/{s/=y/=n/g}' .config
 
-    make CC="${tools_dir}/bin/musl-gcc"
+    make CC="${_cc}"
 
     # Install busybox by hand
     mkdir -p "${target_dir}"/tools/bin
@@ -77,7 +83,7 @@ fetch "${sabotage_kernel_headers_url}"
 
     mkdirp build
 
-    CC="${tools_dir}/bin/musl-gcc -static" ../configure \
+    CC="${_cc} -static" ../configure \
         --prefix=/tools \
         --without-guile
 
@@ -96,7 +102,7 @@ fetch "${sabotage_kernel_headers_url}"
 
     mkdirp build
 
-    CC="${tools_dir}/bin/musl-gcc -static" ../configure \
+    CC="${_cc} -static" ../configure \
         --prefix=/tools
 
     make
@@ -114,7 +120,7 @@ fetch "${sabotage_kernel_headers_url}"
 
     mkdirp build
 
-    CC="${tools_dir}/bin/musl-gcc -static" ../configure \
+    CC="${_cc} -static" ../configure \
         --prefix=/tools \
         --with-internal-glib
 
@@ -133,3 +139,5 @@ fetch "${sabotage_kernel_headers_url}"
 
     make ARCH="$(uname -m)" prefix="/usr" DESTDIR="${target_dir}" install
 }
+
+unset _cc

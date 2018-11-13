@@ -86,9 +86,13 @@ _run_native <<- EOF
     int main(void){puts(gnu_get_libc_version());return 0;}
 EOF
 )"
-    if [ ! -z "${_glibc_version}" ] && [ "$(printf "%s" "${_glibc_version}" | sed 's/\.//')" -ge 228 ]; then
-        echo ">>> glibc version: ${_glibc_version}, enabling GNULib and glibc quirk patch"
-        host_quirks="${host_quirks}too_new_glibc "
+    if [ ! -z "${_glibc_version}" ]; then
+        if [ "$(printf "%s" "${_glibc_version}" | sed 's/\.//')" -ge 228 ]; then
+            echo ">>> glibc version: ${_glibc_version}, enabling GNULib and glibc quirk patch"
+            host_quirks="${host_quirks}too_new_glibc "
+        fi
+
+        host_quirks="${host_quirks}build_musl_gcc_wrapper "
     fi
 }
 

@@ -13,7 +13,7 @@ fetch "${sabotage_kernel_headers_url}"
 fetch "${m4_url}"
 
 # Build musl
-{
+if (printf "%s" "${host_quirks}" | grep -q "build_musl_gcc_wrapper"); then
     build_dir="$(create_tmp "host-musl")"
     cd "${build_dir}"
 
@@ -29,10 +29,10 @@ fetch "${m4_url}"
 
     make
     make install
-}
+fi
 
 # Build kernel headers
-{
+if (printf "%s" "${host_quirks}" | grep -q "build_musl_gcc_wrapper"); then
     build_dir="$(create_tmp "host-kernel-headers")"
     cd "${build_dir}"
 
@@ -41,7 +41,7 @@ fetch "${m4_url}"
     apply_patches "${sabotage_kernel_headers_url}"
 
     make ARCH="$(uname -m)" prefix="${target_dir}" install
-}
+fi
 
 # Build m4
 if (printf "%s" "${host_quirks}" | grep -q "build_own_m4"); then
