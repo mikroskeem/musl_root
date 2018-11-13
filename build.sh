@@ -15,8 +15,11 @@ current_stage=""
 
 . scripts/cli.sh
 
+_oldpath="${PATH}"
+export PATH="${tools_dir}/bin:${PATH}"
+
 # Build tools if necessary
-if [ ! -d "${tools_dir}" ]; then
+if [ ! -d "${tools_dir}/.finished" ]; then
     echo ">>> Building tools"
     . stages/tools/build.sh
 
@@ -24,15 +27,7 @@ if [ ! -d "${tools_dir}" ]; then
     copy_stage
 
     echo ">>> tools built"
-
-    # Now unpack tools
-    mkdir -p "${tools_dir}"
-    transform="$(printf "%s" "${tools_dir}" | sed 's#/##')"
-    tar -C "${tools_dir}" --transform="s#${transform}##" -xf "$(get_stage_archive "tools")"
 fi
-
-_oldpath="${PATH}"
-export PATH="${tools_dir}/bin:${PATH}"
 
 if should_build_stage "stage0"; then
     echo ">>> Building stage0"

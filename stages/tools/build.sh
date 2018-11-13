@@ -4,7 +4,7 @@
 current_stage="tools"
 
 build_dir=""
-target_dir="$(create_build_tmp)"
+target_dir="${root_dir}/tools"
 
 # Fetch sources
 fetch "${musl_url}"
@@ -22,12 +22,12 @@ fetch "${m4_url}"
 
     mkdirp build
     ../configure \
-        --prefix="${root_dir}/tools" \
-        --syslibdir="${root_dir}/tools/lib" \
+        --prefix="${target_dir}" \
+        --syslibdir="${target_dir}/lib" \
         --enable-wrapper=gcc
 
     make
-    make DESTDIR="${target_dir}" install
+    make install
 }
 
 # Build kernel headers
@@ -39,7 +39,7 @@ fetch "${m4_url}"
     cd kernel-headers-"${sabotage_kernel_headers_version}"
     apply_patches "${sabotage_kernel_headers_url}"
 
-    make ARCH="$(uname -m)" prefix="${root_dir}/tools" DESTDIR="${target_dir}" install
+    make ARCH="$(uname -m)" prefix="${target_dir}" install
 }
 
 # Build m4
@@ -53,8 +53,13 @@ if (printf "%s" "${host_quirks}" | grep -q "build_own_m4"); then
 
     mkdirp build
     ../configure \
-        --prefix="${root_dir}/tools"
+        --prefix="${target_dir}"
 
     make
-    make DESTDIR="${target_dir}" install
+    make install
 fi
+
+# Mark stage finished
+{
+    date +%s > "${target_dir}/.finished"
+}
