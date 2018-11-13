@@ -39,6 +39,6 @@ get_stage_archive () {
     if [ "${compress_stages}" = "YES" ]; then
         printf "%s" "${root_dir}/stages/${stagename}/finished.tar.xz"
     else
-        echo "%s" "${root_dir}/stages/${stagename}/finished.tar"
+        printf "%s" "${root_dir}/stages/${stagename}/finished.tar"
     fi
 }
