@@ -4,15 +4,15 @@
 
 # creates stage build directory
 create_build_tmp () {
-    mktemp -d "${tmpbuilds}.${current_stage}.XXXXX"
+    mktemp -d "${tmpbuilds}.${current_stage}.XXXXXX"
 }
 
 # directory (middle) suffix
 create_tmp () {
     if [ "${use_tmp}" = "YES" ]; then
-        mktemp -d "${TMPDIR:-/tmp}/muslroot-${1}.XXXXX"
+        mktemp -d "${TMPDIR:-/tmp}/muslroot-${1}.XXXXXX"
     else
-        mktemp -d "tmp/muslroot-${1}.XXXXX"
+        mktemp -d "tmp/muslroot-${1}.XXXXXX"
     fi
 }
 

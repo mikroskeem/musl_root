@@ -13,7 +13,7 @@ check_command () {
 
 _run_native () {
     required="${1}"
-    _check="$(mktemp /tmp/muslroot-hosttest.XXXX.c)"
+    _check="$(mktemp /tmp/muslroot-hosttest.XXXXXX.c)"
     _check_log="${_check}.log"
     _out=""
 
