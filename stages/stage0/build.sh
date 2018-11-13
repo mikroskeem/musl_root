@@ -16,7 +16,7 @@ fetch "${sabotage_kernel_headers_url}"
 
 # Use musl-gcc if needed
 _cc="${CC:-cc}"
-if (printf "%s" "${host_quirks}" | grep -q "build_musl_gcc_wrapper"); then
+if has_quirk "build_musl_gcc_wrapper"; then
     _cc="${tools_dir}/bin/musl-gcc"
 fi
 

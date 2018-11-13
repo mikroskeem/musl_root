@@ -13,7 +13,7 @@ fetch "${sabotage_kernel_headers_url}"
 fetch "${m4_url}"
 
 # Build musl
-if (printf "%s" "${host_quirks}" | grep -q "build_musl_gcc_wrapper"); then
+if has_quirk "build_musl_gcc_wrapper"; then
     build_dir="$(create_tmp "host-musl")"
     cd "${build_dir}"
 
@@ -32,7 +32,7 @@ if (printf "%s" "${host_quirks}" | grep -q "build_musl_gcc_wrapper"); then
 fi
 
 # Build kernel headers
-if (printf "%s" "${host_quirks}" | grep -q "build_musl_gcc_wrapper"); then
+if has_quirk "no_kernel_headers" || has_quirk "build_musl_gcc_wrapper"; then
     build_dir="$(create_tmp "host-kernel-headers")"
     cd "${build_dir}"
 
@@ -44,7 +44,7 @@ if (printf "%s" "${host_quirks}" | grep -q "build_musl_gcc_wrapper"); then
 fi
 
 # Build m4
-if (printf "%s" "${host_quirks}" | grep -q "build_own_m4"); then
+if has_quirk "build_own_m4"; then
     build_dir="$(create_tmp "host-m4")"
     cd "${build_dir}"
 
@@ -61,7 +61,7 @@ if (printf "%s" "${host_quirks}" | grep -q "build_own_m4"); then
 fi
 
 # Build libtool
-if (printf "%s" "${host_quirks}" | grep -q "build_own_libtool"); then
+if has_quirk "build_own_libtool"; then
     build_dir="$(create_tmp "host-libtool")"
     cd "${build_dir}"
 

@@ -51,6 +51,11 @@ unpack () {
     tar -C "${1}" -xf "${file}" || return "${?}"
 }
 
+has_quirk () {
+    printf "%s" "${host_quirks}" | grep -q "${1}"
+    return "${?}"
+}
+
 apply_patches () {
     name="$(basename "${1}")"
     quirks=""
@@ -65,7 +70,7 @@ apply_patches () {
             _should_apply="YES"
 
             for quirk in ${quirks}; do
-                if ! (printf "%s" "${host_quirks}" | grep -q "${quirk}"); then
+                if ! has_quirk "${quirk}"; then
                     _should_apply=""
                     break
                 fi
