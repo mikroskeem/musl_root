@@ -39,27 +39,28 @@ _run_native () {
 }
 
 host_quirks=""
+tools_available="YES"
 
 echo ">>> Checking available host tools..."
 
-check_command "basename"
-check_command "grep"
-check_command "sed"
-check_command "patch"
-check_command "tar"
+check_command "basename" || { tools_available=NO; }
+check_command "grep" || { tools_available=NO; }
+check_command "sed" || { tools_available=NO; }
+check_command "patch" || { tools_available=NO; }
+check_command "tar" || { tools_available=NO; }
 
 check_command "curl" s || \
     check_command "aria2" s || \
     check_command "wget" s || \
     (check_command "busybox" && busybox --list | grep -q "^wget") || \
-    (echo "Neither curl, aria2 or wget or busybox (or its wget applet isn't enabled) was found in PATH=${PATH}"; exit 1)
+    { echo "Neither curl, aria2 or wget or busybox (or its wget applet isn't enabled) was found in PATH=${PATH}"; tools_available=NO; }
 
-check_command "${CC:-cc}" || exit 1
-check_command "find" || exit 1
-check_command "make" || exit 1
-check_command "pkg-config" || exit 1
-check_command "fakeroot" || exit 1
-check_command "bwrap" || exit 1
+check_command "${CC:-cc}" || { tools_available=NO; }
+check_command "find" || { tools_available=NO; }
+check_command "make" || { tools_available=NO; }
+check_command "pkg-config" || { tools_available=NO; }
+check_command "fakeroot" || { tools_available=NO; }
+check_command "bwrap" || { tools_available=NO; }
 
 check_command "m4" s || {
     echo ">>> Building own M4 as host does not provide it"
@@ -114,6 +115,13 @@ EOF
     fi
 }
 
+if [ ! "${tools_available}" = "YES" ]; then
+    echo ">>> Please install required tools listed above and run this script again"
+    exit 1
+fi
+
 if [ ! -z "${host_quirks}" ]; then
     echo ">>> Host quirks: ${host_quirks}"
 fi
+
+unset tools_available
