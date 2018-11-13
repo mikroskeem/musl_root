@@ -56,7 +56,6 @@ check_command "${CC:-cc}" || exit 1
 check_command "find" || exit 1
 check_command "make" || exit 1
 check_command "pkg-config" || exit 1
-check_command "libtool" || exit 1
 check_command "fakeroot" || exit 1
 
 check_command "m4" s || {
