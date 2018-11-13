@@ -14,7 +14,10 @@ libtool_version="2.4.6"
 pkg_config_version="0.29.2"
 
 # Stage 1:
-
+libexecinfo_version="1.1-2"
+mksh_version="R56c"
+libressl_version="2.8.2"
+curl_version="7.62.0"
 
 # All urls
 busybox_url="https://busybox.net/downloads/busybox-${busybox_version}.tar.bz2"
@@ -24,3 +27,7 @@ make_url="https://ftpmirror.gnu.org/make/make-${make_version}.tar.gz"
 m4_url="https://ftpmirror.gnu.org/m4/m4-${m4_version}.tar.gz"
 libtool_url="https://ftpmirror.gnu.org/libtool/libtool-${libtool_version}.tar.gz"
 pkg_config_url="https://pkg-config.freedesktop.org/releases/pkg-config-${pkg_config_version}.tar.gz"
+libexecinfo_url="https://github.com/mikroskeem/libexecinfo/archive/${libexecinfo_url}.tar.gz"
+mksh_url="https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-${mksh_version}.tgz"
+libressl_url="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${libressl_version}.tar.gz"
+curl_url="https://curl.haxx.se/download/curl-${curl_version}.tar.gz"
