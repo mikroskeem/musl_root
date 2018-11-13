@@ -66,11 +66,6 @@ check_command "m4" s || {
     host_quirks="${host_quirks}build_own_m4 "
 }
 
-check_command "libtool" s || {
-    echo ">>> Building own libtool as host does not provide it"
-    host_quirks="${host_quirks}build_own_libtool "
-}
-
 check_command "xz" || {
     echo "Disabling compression, xz not found in PATH=${PATH}"
     compress_stages=NO
