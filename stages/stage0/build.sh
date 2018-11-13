@@ -20,6 +20,10 @@ if has_quirk "build_musl_gcc_wrapper"; then
     _cc="${tools_dir}/bin/musl-gcc"
 fi
 
+if has_quirk "no_kernel_headers"; then
+    _cc="${_cc} -isystem \"${tools_dir}/include\""
+fi
+
 # Build musl
 {
     build_dir="$(create_tmp "musl")"
