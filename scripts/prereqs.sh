@@ -70,9 +70,11 @@ check_command "libtool" s || {
     host_quirks="${host_quirks}build_own_libtool "
 }
 
-check_command "xz" || {
-    echo "Disabling compression, xz not found in PATH=${PATH}"
-    compress_stages=NO
+check_command "xz" s || {
+    if [ "${compress_stages}" = "YES" ]; then
+        echo "Disabling compression, xz not found in PATH=${PATH}"
+        compress_stages=NO
+    fi
 }
 
 echo ">>> Checking available host libraries..."
