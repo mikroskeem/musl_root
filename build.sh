@@ -19,7 +19,7 @@ _oldpath="${PATH}"
 export PATH="${tools_dir}/bin:${PATH}"
 
 # Build tools if necessary
-if [ ! -d "${tools_dir}/.finished" ]; then
+if [ ! -f "${tools_dir}/.finished" ]; then
     echo ">>> Building tools"
     . stages/tools/build.sh
 
