@@ -71,11 +71,10 @@ if (printf "%s" "${host_quirks}" | grep -q "build_own_libtool"); then
 
     mkdirp build
     ../configure \
-        --prefix="${root_dir}/tools" \
-
+        --prefix="${target_dir}"
 
     make
-    make DESTDIR="${target_dir}" install
+    make install
 fi
 
 # Mark stage finished
