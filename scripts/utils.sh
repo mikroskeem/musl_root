@@ -12,7 +12,7 @@ create_tmp () {
     if [ "${use_tmp}" = "YES" ]; then
         mktemp -d "${TMPDIR:-/tmp}/muslroot-${1}.XXXXXX"
     else
-        mktemp -d "tmp/muslroot-${1}.XXXXXX"
+        mktemp -d "${root_dir}/tmp/muslroot-${1}.XXXXXX"
     fi
 }
 
