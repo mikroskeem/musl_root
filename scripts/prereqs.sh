@@ -59,6 +59,7 @@ check_command "find" || exit 1
 check_command "make" || exit 1
 check_command "pkg-config" || exit 1
 check_command "fakeroot" || exit 1
+check_command "bwrap" || exit 1
 
 check_command "m4" s || {
     echo ">>> Building own M4 as host does not provide it"

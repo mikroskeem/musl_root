@@ -38,7 +38,6 @@ if should_build_stage "stage0"; then
     stage_built
 fi
 
-exit 0
 export PATH="${_oldpath}"
 
 if should_build_stage "stage1"; then
@@ -49,6 +48,8 @@ if should_build_stage "stage1"; then
     copy_stage || return 1
     stage_built
 fi
+
+exit 0
 
 if should_build_stage "stage2"; then
     echo ">>> Building stage2"
