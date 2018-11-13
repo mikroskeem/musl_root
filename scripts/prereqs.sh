@@ -13,12 +13,14 @@ check_command () {
 
 _run_native () {
     required="${1}"
-    _check="$(mktemp /tmp/muslroot-hosttest.XXXXXX.c)"
+    _check="$(mktemp /tmp/muslroot-hosttest.XXXXXX)"
     _check_log="${_check}.log"
     _out=""
 
     set +e
 
+    mv "${_check}" "${_check}.c"
+    _check="${_check}.c"
     cat > "${_check}"
     if "${CC:-cc}" "${_check}" -o "${_check}.b" > "${_check_log}" 2>&1; then
         _out="$("${_check}.b")"
