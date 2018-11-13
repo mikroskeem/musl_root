@@ -98,6 +98,21 @@ EOF
     fi
 }
 
+# Check for Linux kernel headers presence
+{
+    _headers_present="$(
+_run_native <<- EOF
+    #include <stdio.h>
+    #include <linux/version.h>
+    int main(void){puts("YES");return 0;}
+EOF
+)"
+
+    if [ ! "${_headers_present}" = "YES" ]; then
+        host_quirks="${host_quirks}no_kernel_headers "
+    fi
+}
+
 if [ ! -z "${host_quirks}" ]; then
     echo ">>> Host quirks: ${host_quirks}"
 fi
