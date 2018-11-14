@@ -12,6 +12,7 @@ fetch "${musl_url}"
 fetch "${make_url}"
 fetch "${libtool_url}"
 fetch "${pkg_config_url}"
+fetch "${unshare_lite_url}"
 fetch "${sabotage_kernel_headers_url}"
 
 # Use musl-gcc if needed
@@ -152,6 +153,18 @@ fi
 
     make
     make DESTDIR="${target_dir}" install
+}
+
+# Build unshare-lite
+{
+    build_dir="$(create_tmp "unshare-lite")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${unshare_lite_url}"
+    cd unshare-lite-"${unshare_lite_version}"
+    apply_patches "${unshare_lite_url}"
+
+    make CC="${_cc} -static" PREFIX="${target_dir}/usr" install
 }
 
 # Build kernel headers
