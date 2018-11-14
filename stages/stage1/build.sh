@@ -19,6 +19,7 @@ fetch "${mksh_url}"
 fetch "${libressl_url}"
 fetch "${curl_url}"
 fetch "${musl_gcc_url}"
+fetch "${zlib_url}"
 
 # Prepare stage0 rootfs
 {

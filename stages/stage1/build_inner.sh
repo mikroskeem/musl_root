@@ -79,6 +79,24 @@ chmod 755 /usr/bin/ldconfig
     make install
 }
 
+# Build zlib
+{
+    build_dir="$(create_tmp "zlib")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${zlib_url}"
+    cd zlib-"${zlib_version}"
+    apply_patches "${zlib_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr
+
+    make
+    make install
+
+}
+
 # Build curl
 {
     build_dir="$(create_tmp "curl")"

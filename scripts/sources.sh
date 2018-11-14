@@ -18,6 +18,7 @@ musl_gcc_version="$(uname -m)"
 libexecinfo_version="1.1-2"
 mksh_version="R56c"
 libressl_version="2.8.2"
+zlib_version="1.2.11"
 curl_version="7.62.0"
 
 # All urls
@@ -33,3 +34,4 @@ mksh_url="https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-${mksh_version}.tgz"
 libressl_url="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${libressl_version}.tar.gz"
 curl_url="https://curl.haxx.se/download/curl-${curl_version}.tar.gz"
 musl_gcc_url="https://musl.cc/${musl_gcc_version}-linux-musl-native.tgz"
+zlib_url="https://zlib.net/zlib-${zlib_version}.tar.gz"
