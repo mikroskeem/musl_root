@@ -106,9 +106,9 @@ build_dir=""
         --without-libidn2 \
         --without-libmetalink \
         --without-libpsl \
-        --without-rtmp
+        --without-rtmp \
+        --without-zsh-functions-dir
 
     make
     make install
-    make install -C scripts
 }
