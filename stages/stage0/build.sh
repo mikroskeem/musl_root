@@ -156,7 +156,7 @@ fi
 }
 
 # Build unshare-lite
-{
+if has_quirk "unisolated_stage_build"; then
     build_dir="$(create_tmp "unshare-lite")"
     cd "${build_dir}"
 
@@ -164,8 +164,9 @@ fi
     cd unshare-lite-"${unshare_lite_version}"
     apply_patches "${unshare_lite_url}"
 
-    make CC="${_cc} -static" PREFIX="${target_dir}/usr" install
-}
+    make CC="${_cc} -static"
+    cp unshare "${target_dir}/tools/bin"
+fi
 
 # Build kernel headers
 {
