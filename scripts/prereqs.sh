@@ -69,7 +69,7 @@ else
     _bwrap_works="$(bwrap --unshare-all --share-net --die-with-parent \
         --ro-bind / / \
         /bin/sh -c "printf '%s' 'YES'" \
-        2>/dev/null
+        2>/dev/null || true
     )"
 
     if [ ! "${_bwrap_works}" = "YES" ]; then
