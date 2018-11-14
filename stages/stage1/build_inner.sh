@@ -13,6 +13,13 @@ cd /musl_root
 
 build_dir=""
 
+# "Fix" missing ldconfig
+cat > /usr/bin/ldconfig <<- EOF
+#!/bin/sh
+exit 0
+EOF
+chmod 755 /usr/bin/ldconfig
+
 # Build libexecinfo
 {
     build_dir="$(create_tmp "libexecinfo")"
