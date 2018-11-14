@@ -55,6 +55,4 @@ fetch "${musl_gcc_url}"
                         /musl_root/stages/stage1/build_inner.sh
         rm "${target_dir}"/etc/resolv.conf
     fi
-
-    exit 1
 }
