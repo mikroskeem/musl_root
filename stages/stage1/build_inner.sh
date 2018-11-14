@@ -2,18 +2,16 @@
 
 # I dare you to run this on your host system.
 
+set -e
+
+cd /musl_root
+
 . /musl_root/config.sh
 . /musl_root/scripts/config_init.sh
 . /musl_root/scripts/sources.sh
 . /musl_root/scripts/utils.sh
 
 build_dir=""
-
-# Fetch sources
-fetch "${libexecinfo_url}"
-fetch "${mksh_url}"
-fetch "${libressl_url}"
-fetch "${curl_url}"
 
 # Build libexecinfo
 {
