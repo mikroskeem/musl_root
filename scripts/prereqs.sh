@@ -60,7 +60,23 @@ check_command "find" || { tools_available=NO; }
 check_command "make" || { tools_available=NO; }
 check_command "pkg-config" || { tools_available=NO; }
 check_command "fakeroot" || { tools_available=NO; }
-check_command "bwrap" || { tools_available=NO; }
+
+if ! check_command "bwrap" s; then
+    host_quirks="${host_quirks}unisolated_stage_build ";
+    check_command "chroot" || { tools_available=NO; }
+else
+    # Simple test
+    _bwrap_works="$(bwrap --unshare-all --share-net --die-with-parent \
+        --ro-bind / / \
+        /bin/sh -c "printf '%s' 'YES'" \
+        2>/dev/null
+    )"
+
+    if [ ! "${_bwrap_works}" = "YES" ]; then
+        host_quirks="${host_quirks}unisolated_stage_build ";
+        check_command "chroot" || { tools_available=NO; }
+    fi
+fi
 
 check_command "m4" s || {
     echo ">>> Building own M4 as host does not provide it"
