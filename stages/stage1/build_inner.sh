@@ -41,20 +41,14 @@ build_dir=""
 
     # Create directory structure
     install -d "${PREFIX}"/bin
-    install -d /usr/share/man/cat1/
-    install -d /usr/share/man/man1/
     install -d /usr/share/doc/mksh/examples/
 
     # Copy files
     install -s -m 555 mksh "${PREFIX}"/bin/mksh
     install -m 444 dot.mkshrc /usr/share/doc/mksh/examples/
-    install -m 444 lksh.cat1 /usr/share/man/cat1/lksh.0
-    install -m 444 mksh.cat1 /usr/share/man/cat1/mksh.0
-    install -m 444 lksh.1 /usr/share/man/man1/lksh.1
-    install -m 444 mksh.1 /usr/share/man/man1/mksh.1
 
     # Symlink /usr/bin/sh to /usr/bin/mksh
-    ln -s "${PREFIX}"/bin/mksh "${PREFIX}"/bin/sh
+    ln -sf "${PREFIX}"/bin/mksh "${PREFIX}"/bin/sh
 
     grep -x "${PREFIX}"/bin/mksh /etc/shells > /dev/null || \
         echo "${PREFIX}"/bin/mksh >> /etc/shells
