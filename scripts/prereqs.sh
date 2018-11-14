@@ -73,6 +73,7 @@ else
     )"
 
     if [ ! "${_bwrap_works}" = "YES" ]; then
+        echo ">>> bubblewrap didn't seem to work, falling back to chroot"
         host_quirks="${host_quirks}unisolated_stage_build ";
         check_command "chroot" || { tools_available=NO; }
     fi
