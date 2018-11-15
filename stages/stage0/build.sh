@@ -118,6 +118,23 @@ fi
     make DESTDIR="${target_dir}" install
 }
 
+# Build static m4
+{
+    build_dir="$(create_tmp "m4")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${m4_url}"
+    cd m4-"${m4_version}"
+    apply_patches "${m4_url}"
+
+    mkdirp build
+    CC="${_cc} -static" ../configure \
+        --prefix=/tools
+
+    make
+    make DESTDIR="${target_dir}" install
+}
+
 # Build static libtool
 {
     build_dir="$(create_tmp "libtool")"
