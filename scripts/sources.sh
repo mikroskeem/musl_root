@@ -12,7 +12,6 @@ make_version="4.2.1"
 m4_version="1.4.18"
 libtool_version="2.4.6"
 pkg_config_version="0.29.2"
-musl_gcc_version="$(uname -m)"
 unshare_lite_version="0.1"
 
 # Stage 1:
@@ -35,5 +34,4 @@ libexecinfo_url="https://github.com/mikroskeem/libexecinfo/archive/${libexecinfo
 mksh_url="https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-${mksh_version}.tgz"
 libressl_url="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${libressl_version}.tar.gz"
 curl_url="https://curl.haxx.se/download/curl-${curl_version}.tar.gz"
-musl_gcc_url="https://musl.cc/${musl_gcc_version}-linux-musl-native.tgz"
 zlib_url="https://zlib.net/zlib-${zlib_version}.tar.gz"
