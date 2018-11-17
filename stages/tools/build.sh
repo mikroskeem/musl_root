@@ -11,7 +11,7 @@ cc_target="$(uname -m)-linux-musl"
 # Fetch sources
 fetch "${libtool_url}"
 fetch "${musl_url}"
-fetch "${kernel_headers_url}"
+fetch "${linux_kernel_url}"
 fetch "${m4_url}"
 
 fetch "${binutils_url}"
@@ -116,9 +116,9 @@ fetch "${mpc_url}"
     # Extract kernel headers
     cd "${build_dir}"
 
-    unpack "${build_dir}" "${kernel_headers_url}"
-    cd linux-"${kernel_headers_version}"
-    apply_patches "${kernel_headers_url}"
+    unpack "${build_dir}" "${linux_kernel_url}"
+    cd linux-"${linux_kernel_version}"
+    apply_patches "${linux_kernel_url}"
 
     make mrproper
     make ARCH="$(uname -m)" \

@@ -6,7 +6,7 @@
 # Stage 0:
 busybox_version="1.29.3"
 musl_version="1.1.20"
-kernel_headers_version="4.19.2"
+linux_kernel_version="4.19.2"
 
 make_version="4.2.1"
 m4_version="1.4.18"
@@ -30,7 +30,7 @@ curl_version="7.62.0"
 # All urls
 busybox_url="https://busybox.net/downloads/busybox-${busybox_version}.tar.bz2"
 musl_url="https://www.musl-libc.org/releases/musl-${musl_version}.tar.gz"
-kernel_headers_url="https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-${kernel_headers_version}.tar.xz"
+linux_kernel_url="https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-${linux_kernel_version}.tar.xz"
 make_url="https://ftpmirror.gnu.org/make/make-${make_version}.tar.gz"
 m4_url="https://ftpmirror.gnu.org/m4/m4-${m4_version}.tar.gz"
 libtool_url="https://ftpmirror.gnu.org/libtool/libtool-${libtool_version}.tar.gz"
