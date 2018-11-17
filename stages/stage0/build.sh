@@ -6,6 +6,9 @@ current_stage="stage0"
 build_dir=""
 target_dir="$(create_build_tmp)"
 
+_ctools_dir=""
+_target=""
+
 # Fetch sources
 fetch "${busybox_url}"
 fetch "${musl_url}"
@@ -15,15 +18,14 @@ fetch "${pkg_config_url}"
 fetch "${unshare_lite_url}"
 fetch "${sabotage_kernel_headers_url}"
 
-# Use musl-gcc if needed
-_cc="${CC:-cc}"
-if has_quirk "build_musl_gcc_wrapper"; then
-    _cc="${tools_dir}/bin/musl-gcc"
-fi
+fetch "${binutils_url}"
+fetch "${gcc_url}"
+fetch "${gmp_url}"
+fetch "${mpfr_url}"
+fetch "${mpc_url}"
 
-if has_quirk "no_kernel_headers"; then
-    _cc="${_cc} -isystem \"${tools_dir}/include\""
-fi
+# Define cross compiler env var
+CROSS_COMPILE="${root_dir}/tools/cross/bin/$(uname -m)-linux-musl-"
 
 # Set up base filesystem
 {
@@ -45,24 +47,6 @@ fi
 
     # Symlink busybox sh as default shell
     ln -s /tools/bin/busybox "${target_dir}"/usr/bin/sh
-}
-
-# Build musl
-{
-    build_dir="$(create_tmp "musl")"
-    cd "${build_dir}"
-
-    unpack "${build_dir}" "${musl_url}"
-    cd musl-"${musl_version}"
-    apply_patches "${musl_url}"
-
-    mkdirp build
-    ../configure \
-        --prefix=/usr \
-        --syslibdir=/usr/lib
-
-    make
-    make DESTDIR="${target_dir}" install
 }
 
 # Build busybox
@@ -196,5 +180,93 @@ fi
 
     make ARCH="$(uname -m)" prefix="/usr" DESTDIR="${target_dir}" install
 }
+
+exit 1
+
+# Build target gcc
+{
+    build_dir="$(create_tmp "target-gcc")"
+    _gcc_dir="${build_dir}/gcc-${gcc_version}"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${binutils_url}"
+    unpack "${build_dir}" "${gcc_url}"
+    unpack "${build_dir}" "${gmp_url}"
+    unpack "${build_dir}" "${mpfr_url}"
+    unpack "${build_dir}" "${mpc_url}"
+
+    cd "${build_dir}/binutils-${binutils_version}" && apply_patches "${binutils_url}"
+    cd "${build_dir}/gcc-${gcc_version}" && apply_patches "${gcc_url}"
+    cd "${build_dir}/gmp-${gmp_version}" && apply_patches "${gmp_url}"
+    cd "${build_dir}/mpfr-${mpfr_version}" && apply_patches "${mpfr_url}"
+    cd "${build_dir}/mpc-${mpc_version}" && apply_patches "${mpc_url}"
+
+    # Symlink GMP, MPFR and MPC to GCC source dir
+    ln -s ../gmp-"${gmp_version}" "${_gcc_dir}/gmp"
+    ln -s ../mpfr-"${mpfr_version}" "${_gcc_dir}/mpfr"
+    ln -s ../mpc-"${mpc_version}" "${_gcc_dir}/mpc"
+
+    _target="$(uname -m)-linux-musl"
+
+    # Build binutils
+    cd "${build_dir}/binutils-${binutils_version}"
+    mkdirp build
+    CC="${_cc}" ../configure \
+        --prefix="${build_dir}/tools/cross" \
+        --target="${_target}" \
+        --disable-nls \
+        --disable-multilib \
+        --disable-werror \
+        --disable-rpath \
+        --enable-shared \
+        --with-sysroot="${build_dir}"
+
+    make configure-host
+    make
+    make install
+
+    # Check for ${_target}-as
+    __oldpath="${PATH}"
+    export PATH="${build_dir}/tools/cross/bin:${PATH}"
+
+    [ -z "$(command -v "${_target}-as")" ] && {
+        echo ">>> binutils did not build properly"
+        exit 1
+    }
+
+    # Build gcc
+    cd "${build_dir}/gcc-${gcc_version}"
+    mkdirp build
+    CC="${_cc}" ../configure \
+        --prefix="${build_dir}/tools/cross" \
+        --target="${_target}" \
+        --disable-decimal-float \
+        --disable-libgomp \
+        --disable-libmudflap \
+        --disable-libssp \
+        --disable-multilib \
+        --disable-nls \
+        --disable-shared \
+        --disable-threads \
+        --disable-werror \
+        --enable-languages=c \
+        --enable-tls \
+        --with-newlib \
+        --with-sysroot="${build_dir}" \
+        --without-headers
+
+    make all-gcc all-target-libgcc
+    make install-gcc install-target-libgcc
+
+    # Check if GCC built properly
+    [ -z "$(command -v "${_target}-gcc")" ] && {
+        echo ">>> gcc did not build properly - '${_target}-gcc' not found"
+        exit 1
+    }
+
+    export PATH="${__oldpath}"
+}
+
+# Build target musl
 
 unset _cc
