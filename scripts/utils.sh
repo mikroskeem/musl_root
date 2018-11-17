@@ -9,7 +9,7 @@ create_build_tmp () {
 
 # directory (middle) suffix
 create_tmp () {
-    if [ "${use_tmp}" = "YES" ]; then
+    if [ "${use_tmp}" = "YES" ] && [ ! "${2}" = "DISK" ]; then
         mktemp -d "${TMPDIR:-/tmp}/muslroot-${1}.XXXXXX"
     else
         mktemp -d "${root_dir}/tmp/muslroot-${1}.XXXXXX"
