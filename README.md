@@ -17,3 +17,6 @@ Lightweight packages:
 - [ ] Make possible to build musl_root from musl_root
 - [ ] Package manager (explore available options)
 - [ ] Decide build scripts license
+
+## Special thanks
+- [@artizirk](https://keybase.io/artizirk) - for letting me to borrow his powerful AMD PC to finally build a toolchain
