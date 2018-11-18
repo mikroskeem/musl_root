@@ -16,12 +16,23 @@ create_tmp () {
     fi
 }
 
+# url
+_extract_name () {
+    basename "$(printf '%s' "${1}" | sed 's/\(.*\):http.*/\1/')"
+}
+
+# url
+_extract_url () {
+    printf '%s' "${1}" | sed 's/.*:\(http.*\)/\1/'
+}
+
 # source
 _dl_tool=""
 
-# shellcheck disable=SC2016
+# shellcheck disable=SC2016,SC2034
 fetch () {
-    name="$(basename "${1}")"
+    name="$(_extract_name "${1}")"
+    url="$(_extract_url "${1}")"
     file="${sources}/${name}"
     if [ -f "${file}" ]; then
         return 0
@@ -29,11 +40,11 @@ fetch () {
 
     if [ -z "${_dl_tool}" ]; then
         if [ ! -z "$(command -v curl)" ]; then
-            _dl_tool='curl -L -o ${file} --connect-timeout 10 --retry 5 --retry-delay 2 --retry-max-time 15 ${1}'
+            _dl_tool='curl -L -o ${file} --connect-timeout 10 --retry 5 --retry-delay 2 --retry-max-time 15 ${url}'
         elif [ ! -z "$(command -v aria2c)" ]; then
-            _dl_tool='aria2 -o ${file} ${1}'
+            _dl_tool='aria2 -o ${file} ${url}'
         elif [ ! -z "$(command -v wget)" ]; then
-            _dl_tool='wget -O ${file} ${1}'
+            _dl_tool='wget -O ${file} ${url}'
         fi
     fi
 
@@ -44,7 +55,7 @@ fetch () {
 
 # target dir, package
 unpack () {
-    name="$(basename "${2}")"
+    name="$(_extract_name "${2}")"
     file="${sources}/${name}"
 
     inform "Unpacking '${name}'"
@@ -57,9 +68,9 @@ has_quirk () {
 }
 
 apply_patches () {
-    name="$(basename "${1}")"
+    name="$(_extract_name "${1}")"
     quirks=""
-    _should_apply=""
+    should_apply=""
     name="${name%%.tar*}"
 
     if [ -d "${patches}/${name}" ]; then
@@ -67,16 +78,16 @@ apply_patches () {
         find "${patches}/${name}" -mindepth 1 -maxdepth 1 -name "*.patch" | while read -r _p; do
             # Check if patch should be applied
             quirks="$(grep '^!quirk: ' "${_p}" | sed '/^!quirk: /{s///g}') || true)"
-            _should_apply="YES"
+            should_apply="YES"
 
             for quirk in ${quirks}; do
                 if ! has_quirk "${quirk}"; then
-                    _should_apply=""
+                    should_apply=""
                     break
                 fi
             done
 
-            if [ "${_should_apply}" = "YES" ]; then
+            if [ "${should_apply}" = "YES" ]; then
                 inform "Applying patch: $(basename "${_p}")"
                 patch -p1 < "${_p}" || return "${?}"
             fi
