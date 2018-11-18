@@ -16,7 +16,7 @@ fetch "${make_url}"
 fetch "${libtool_url}"
 fetch "${pkg_config_url}"
 fetch "${unshare_lite_url}"
-fetch "${sabotage_kernel_headers_url}"
+fetch "${linux_kernel_url}"
 
 fetch "${binutils_url}"
 fetch "${gcc_url}"
@@ -25,7 +25,7 @@ fetch "${mpfr_url}"
 fetch "${mpc_url}"
 
 # Define cross compiler env var
-CROSS_COMPILE="${root_dir}/tools/cross/bin/$(uname -m)-linux-musl-"
+cc_target="$(uname -m)-unknown-linux-musl"
 
 # Set up base filesystem
 {
@@ -58,7 +58,7 @@ CROSS_COMPILE="${root_dir}/tools/cross/bin/$(uname -m)-linux-musl-"
     cd busybox-"${busybox_version}"
     apply_patches "${busybox_url}"
 
-    make CC="${_cc}" defconfig
+    make CROSS_COMPILE="${cc_target}-" defconfig
 
     sed -i '/CONFIG_STATIC/{s/.*/CONFIG_STATIC=y/}' .config
 
@@ -72,7 +72,7 @@ CROSS_COMPILE="${root_dir}/tools/cross/bin/$(uname -m)-linux-musl-"
     sed -i '/^CONFIG_SV.*=/{s/=y/=n/g}' .config
     sed -i '/^CONFIG_UBI.*=/{s/=y/=n/g}' .config
 
-    make CC="${_cc}"
+    make CROSS_COMPILE="${cc_target}-"
 
     # Install busybox by hand
     mkdir -p "${target_dir}"/tools/bin
@@ -94,7 +94,8 @@ CROSS_COMPILE="${root_dir}/tools/cross/bin/$(uname -m)-linux-musl-"
 
     mkdirp build
 
-    CC="${_cc} -static" ../configure \
+    CFLAGS="-static" ../configure \
+        --host="${cc_target}" \
         --prefix=/tools \
         --without-guile
 
@@ -112,7 +113,8 @@ CROSS_COMPILE="${root_dir}/tools/cross/bin/$(uname -m)-linux-musl-"
     apply_patches "${m4_url}"
 
     mkdirp build
-    CC="${_cc} -static" ../configure \
+    CFLAGS="-static" ../configure \
+        --host="${cc_target}" \
         --prefix=/tools
 
     make
@@ -130,7 +132,8 @@ CROSS_COMPILE="${root_dir}/tools/cross/bin/$(uname -m)-linux-musl-"
 
     mkdirp build
 
-    CC="${_cc} -static" ../configure \
+    CFLAGS="-static" ../configure \
+        --host="${cc_target}" \
         --prefix=/tools
 
     make
@@ -148,7 +151,8 @@ CROSS_COMPILE="${root_dir}/tools/cross/bin/$(uname -m)-linux-musl-"
 
     mkdirp build
 
-    CC="${_cc} -static" ../configure \
+    CFLAGS="-static" ../configure \
+        --host="${cc_target}" \
         --prefix=/tools \
         --with-internal-glib
 
@@ -165,27 +169,52 @@ if has_quirk "unisolated_stage_build"; then
     cd unshare-lite-"${unshare_lite_version}"
     apply_patches "${unshare_lite_url}"
 
-    make CC="${_cc} -static"
+    make CC="${cc_target}-gcc -static"
     cp unshare "${target_dir}/tools/bin"
 fi
 
-# Build kernel headers
+# Extract kernel headers
 {
     build_dir="$(create_tmp "kernel-headers")"
     cd "${build_dir}"
 
-    unpack "${build_dir}" "${sabotage_kernel_headers_url}"
-    cd kernel-headers-"${sabotage_kernel_headers_version}"
-    apply_patches "${sabotage_kernel_headers_url}"
 
-    make ARCH="$(uname -m)" prefix="/usr" DESTDIR="${target_dir}" install
+    unpack "${build_dir}" "${linux_kernel_url}"
+    cd linux-"${linux_kernel_version}"
+    apply_patches "${linux_kernel_url}"
+
+    make mrproper
+    make ARCH="$(uname -m)" \
+        INSTALL_HDR_PATH="${target_dir}/usr" \
+        headers_install
 }
 
-exit 1
+# Build musl
+{
+    build_dir="$(create_tmp "target-musl")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${musl_url}"
+    apply_patches "${musl_url}"
+    cd musl-"${musl_version}"
+
+    mkdirp build
+    ../configure \
+        --host="${cc_target}" \
+        --prefix="/usr" \
+        --syslibdir="/usr/lib" \
+        --disable-wrapper
+
+    make
+    make DESTDIR="${target_dir}" install
+
+    # Install ldd symlink
+    ln -s "/usr/lib/ld-musl-$(uname -m).so.1" "${target_dir}/usr/bin/ldd"
+}
 
 # Build target gcc
 {
-    build_dir="$(create_tmp "target-gcc")"
+    build_dir="$(create_tmp "target-gcc" "DISK")"
     _gcc_dir="${build_dir}/gcc-${gcc_version}"
     cd "${build_dir}"
 
@@ -206,67 +235,67 @@ exit 1
     ln -s ../mpfr-"${mpfr_version}" "${_gcc_dir}/mpfr"
     ln -s ../mpc-"${mpc_version}" "${_gcc_dir}/mpc"
 
-    _target="$(uname -m)-linux-musl"
-
     # Build binutils
     cd "${build_dir}/binutils-${binutils_version}"
     mkdirp build
-    CC="${_cc}" ../configure \
-        --prefix="${build_dir}/tools/cross" \
-        --target="${_target}" \
+    ../configure \
+        --host="${cc_target}" \
+        --target="${cc_target}" \
+        --prefix="/tools" \
         --disable-nls \
         --disable-multilib \
         --disable-werror \
         --disable-rpath \
-        --enable-shared \
-        --with-sysroot="${build_dir}"
+        --enable-shared
 
     make configure-host
     make
-    make install
+    make DESTDIR="${target_dir}" install
 
-    # Check for ${_target}-as
-    __oldpath="${PATH}"
-    export PATH="${build_dir}/tools/cross/bin:${PATH}"
+    # XXX: apparently this doesn't exist when host == target?
+    # Check for ${cc_target}-as
+    #[ ! -f "${target_dir}/tools/bin/${cc_target}-as" ] && {
+    #    echo ">>> binutils did not build properly - '${cc_target}-as' not found"
+    #    exit 1
+    #}
 
-    [ -z "$(command -v "${_target}-as")" ] && {
-        echo ">>> binutils did not build properly"
+    # Check for as
+    [ ! -f "${target_dir}/tools/bin/as" ] && {
+        echo ">>> binutils did not build properly - 'as' not found"
         exit 1
     }
+
 
     # Build gcc
     cd "${build_dir}/gcc-${gcc_version}"
+
+    # Disable fixincludes and don't use lib64
+    sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+    sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
+
     mkdirp build
-    CC="${_cc}" ../configure \
-        --prefix="${build_dir}/tools/cross" \
-        --target="${_target}" \
-        --disable-decimal-float \
-        --disable-libgomp \
-        --disable-libmudflap \
-        --disable-libssp \
+    ../configure \
+        --host="${cc_target}" \
+        --target="${cc_target}" \
+        --prefix="/tools" \
         --disable-multilib \
         --disable-nls \
-        --disable-shared \
-        --disable-threads \
         --disable-werror \
-        --enable-languages=c \
-        --enable-tls \
-        --with-newlib \
-        --with-sysroot="${build_dir}" \
-        --without-headers
+        --disable-libsanitizer \
+        --enable-default-pie \
+        --enable-default-ssp \
+        --enable-languages=c,c++ \
+        --enable-tls
 
     make all-gcc all-target-libgcc
-    make install-gcc install-target-libgcc
+    make DESTDIR="${target_dir}" install-gcc install-target-libgcc
 
     # Check if GCC built properly
-    [ -z "$(command -v "${_target}-gcc")" ] && {
-        echo ">>> gcc did not build properly - '${_target}-gcc' not found"
+    [ ! -f "${target_dir}/tools/bin/${cc_target}-gcc" ] && {
+        echo ">>> gcc did not build properly - '${cc_target}-gcc' not found"
         exit 1
     }
 
-    export PATH="${__oldpath}"
+    # Symlink cc to gcc
+    ln -s gcc "${target_dir}/usr/bin/cc"
 }
-
-# Build target musl
-
-unset _cc
