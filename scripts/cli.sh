@@ -19,6 +19,9 @@ Usage:
         Exits script immediately after processing command line arguments.
         Note that this ${_cred}*must*${_cnormal} be the last argument, as arguments are processed
         in order.
+
+    ${_cred}${_cbold}verbose${_cnormal}
+        Make building process verbose (rediects build stage outputs to console as well).
 EOF
             exit 0
             ;;
@@ -34,6 +37,10 @@ EOF
             ;;
         "exit")
             exit 0
+            ;;
+        "verbose")
+            note "Verbose logging is on, expect a lot of output"
+            verbose_logging=ON
             ;;
         *)
             warning "Unknown argument: '${1}'"
