@@ -192,6 +192,8 @@ fetch "${mpc_url}"
         exit 1
     fi
 
+    # Remove build directory to save space
+    rm -rf "${build_dir}" || true
 }
 
 # Build m4

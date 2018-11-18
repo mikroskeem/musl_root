@@ -298,4 +298,7 @@ fi
 
     # Symlink cc to gcc
     ln -s gcc "${target_dir}/tools/bin/cc"
+
+    # Remove build directory to save space
+    rm -rf "${build_dir}" || true
 }
