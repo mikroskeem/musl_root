@@ -97,40 +97,7 @@ check_command "xz" s || {
 }
 
 echo ">>> Checking available host libraries..."
-
-# Check for glibc version
-{
-    _glibc_version="$(
-_run_native <<- EOF
-    #include <stdio.h>
-    #include <gnu/libc-version.h>
-    int main(void){puts(gnu_get_libc_version());return 0;}
-EOF
-)"
-    if [ ! -z "${_glibc_version}" ]; then
-        if [ "$(printf "%s" "${_glibc_version}" | sed 's/\.//')" -ge 228 ]; then
-            echo ">>> glibc version: ${_glibc_version}, enabling GNULib and glibc quirk patch"
-            host_quirks="${host_quirks}too_new_glibc "
-        fi
-
-        host_quirks="${host_quirks}build_musl_gcc_wrapper "
-    fi
-}
-
-# Check for Linux kernel headers presence
-{
-    _headers_present="$(
-_run_native <<- EOF
-    #include <stdio.h>
-    #include <linux/version.h>
-    int main(void){puts("YES");return 0;}
-EOF
-)"
-
-    if [ ! "${_headers_present}" = "YES" ]; then
-        host_quirks="${host_quirks}no_kernel_headers "
-    fi
-}
+# None right now
 
 if [ ! "${tools_available}" = "YES" ]; then
     echo ">>> Please install required tools listed above and run this script again"
