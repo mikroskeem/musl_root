@@ -36,8 +36,8 @@
  
  MANPREFIX?=		${UPREFIX}/share
  MANDIR?=		${MANPREFIX}/man
---- src/rc/Makefile.orig	2018-11-10 03:37:59.607062743 +0200
-+++ src/rc/Makefile	2018-11-10 03:38:24.840771628 +0200
+--- a/src/rc/Makefile.orig	2018-11-10 03:37:59.607062743 +0200
++++ b/src/rc/Makefile	2018-11-10 03:38:24.840771628 +0200
 @@ -19,8 +19,8 @@
  
  CLEANFILES=	version.h rc-selinux.o
