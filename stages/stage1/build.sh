@@ -8,11 +8,9 @@ target_dir="$(create_build_tmp)"
 
 # Fetch sources
 fetch "${busybox_url}"
-fetch "${musl_url}"
 fetch "${make_url}"
 fetch "${libtool_url}"
 fetch "${pkg_config_url}"
-fetch "${sabotage_kernel_headers_url}"
 
 fetch "${libexecinfo_url}"
 fetch "${mksh_url}"
