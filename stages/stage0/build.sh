@@ -261,7 +261,7 @@ fi
 
     # Check for as
     [ ! -f "${target_dir}/tools/bin/as" ] && {
-        echo ">>> binutils did not build properly - 'as' not found"
+        error "binutils did not build properly - 'as' not found"
         exit 1
     }
 
@@ -292,7 +292,7 @@ fi
 
     # Check if GCC built properly
     [ ! -f "${target_dir}/tools/bin/${cc_target}-gcc" ] && {
-        echo ">>> gcc did not build properly - '${cc_target}-gcc' not found"
+        error ">>> gcc did not build properly - '${cc_target}-gcc' not found"
         exit 1
     }
 

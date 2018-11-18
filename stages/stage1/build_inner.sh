@@ -8,6 +8,7 @@ cd /musl_root
 
 . /musl_root/config.sh
 . /musl_root/scripts/config_init.sh
+. /musl_root/scripts/colors.sh
 . /musl_root/scripts/sources.sh
 . /musl_root/scripts/utils.sh
 
