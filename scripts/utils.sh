@@ -77,7 +77,7 @@ apply_patches () {
         inform "Applying patches for '${name}'"
         find "${patches}/${name}" -mindepth 1 -maxdepth 1 -name "*.patch" | while read -r _p; do
             # Check if patch should be applied
-            quirks="$(grep '^!quirk: ' "${_p}" | sed '/^!quirk: /{s///g}') || true)"
+            quirks="$(grep '^!quirk: ' "${_p}" | sed '/^!quirk: /{s///g}')"
             should_apply="YES"
 
             for quirk in ${quirks}; do
