@@ -8,25 +8,20 @@ target_dir="$(create_build_tmp)"
 
 # Fetch sources
 fetch "${busybox_url}"
-fetch "${musl_url}"
 fetch "${make_url}"
 fetch "${libtool_url}"
 fetch "${pkg_config_url}"
-fetch "${sabotage_kernel_headers_url}"
 
 fetch "${libexecinfo_url}"
 fetch "${mksh_url}"
 fetch "${libressl_url}"
 fetch "${curl_url}"
-fetch "${musl_gcc_url}"
 fetch "${zlib_url}"
 
 # Prepare stage0 rootfs
 {
     build_dir="$(create_tmp "base")"
     tar -C "${target_dir}" -xvf "$(get_stage_archive "stage0")"
-    unpack "${target_dir}" "${musl_gcc_url}"
-    ln -s gcc "${target_dir}/${musl_gcc_version}-linux-musl-native/bin/cc"
 
     # Build stuff in musl_root environment
     if ! has_quirk "unisolated_stage_build"; then
@@ -41,7 +36,7 @@ fetch "${zlib_url}"
             --proc /proc \
                 /tools/bin/env -i \
                     HOME=/ \
-                    PATH=/usr/bin:/tools/bin:/"${musl_gcc_version}"-linux-musl-native/bin \
+                    PATH=/usr/bin:/tools/bin \
                         /tools/bin/ash \
                         /musl_root/stages/stage1/build_inner.sh
     else
@@ -51,7 +46,7 @@ fetch "${zlib_url}"
         chroot "${target_dir}" \
                 /tools/bin/env -i \
                     HOME=/ \
-                    PATH=/usr/bin:/tools/bin:/"${musl_gcc_version}"-linux-musl-native/bin \
+                    PATH=/usr/bin:/tools/bin \
                         /tools/bin/ash \
                         /musl_root/stages/stage1/build_inner.sh
         rm "${target_dir}"/etc/resolv.conf

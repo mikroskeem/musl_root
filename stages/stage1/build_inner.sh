@@ -94,7 +94,6 @@ chmod 755 /usr/bin/ldconfig
 
     make
     make install
-
 }
 
 # Build curl
