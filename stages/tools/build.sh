@@ -6,7 +6,8 @@ current_stage="tools"
 build_dir=""
 target_dir="${root_dir}/tools"
 
-cc_target="$(uname -m)-linux-musl"
+cc_target="$(uname -m)-unknown-linux-musl"
+__oldpath="${PATH}"
 
 # Fetch sources
 fetch "${libtool_url}"
@@ -46,9 +47,15 @@ fetch "${mpc_url}"
     # Build binutils
     cd "${build_dir}/binutils-${binutils_version}"
     mkdirp build
+
+    # Configure without optimization and debug info,
+    # reduces overall build time
+    CFLAGS="-O0 -g0" \
+    CXXFLAGS="-O0 -g0" \
     ../configure \
         --prefix="${target_dir}" \
         --target="${cc_target}" \
+        --disable-install-libbfd \
         --disable-nls \
         --disable-multilib \
         --disable-werror \
@@ -62,7 +69,6 @@ fetch "${mpc_url}"
     make install
 
     # Check for ${_target}-as
-    __oldpath="${PATH}"
     export PATH="${target_dir}/bin:${PATH}"
 
     [ -z "$(command -v "${cc_target}-as")" ] && {
@@ -72,10 +78,13 @@ fetch "${mpc_url}"
 
     # Build gcc
     cd "${build_dir}/gcc-${gcc_version}"
+
+    # Disable fixincludes and don't use lib64
+    sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+    sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
+
     mkdirp build
 
-    # Configure without optimization and debug info,
-    # reduces overall build time
     CFLAGS="-O0 -g0" \
     CXXFLAGS="-O0 -g0" \
     ../configure \
@@ -111,7 +120,10 @@ fetch "${mpc_url}"
         exit 1
     }
 
-    export PATH="${__oldpath}"
+    # Create limits.h
+    cd ..
+    cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
+        "$(dirname "$("${cc_target}-gcc" -print-libgcc-file-name)")/include/limits.h"
 
     # Extract kernel headers
     cd "${build_dir}"
@@ -133,8 +145,9 @@ fetch "${mpc_url}"
     apply_patches "${musl_url}"
 
     mkdirp build
-    CROSS_COMPILE="${target_dir}/bin/${cc_target}-" ../configure \
-        --prefix="${target_dir}"\
+    ../configure \
+        --host="${cc_target}" \
+        --prefix="${target_dir}" \
         --includedir="${target_dir}/include" \
         --syslibdir="${target_dir}/lib" \
         --disable-wrapper
@@ -179,6 +192,7 @@ fetch "${mpc_url}"
         cat "${_testlog}"
         exit 1
     fi
+
 }
 
 # Build m4
@@ -191,7 +205,8 @@ if has_quirk "build_own_m4"; then
     apply_patches "${m4_url}"
 
     mkdirp build
-    ../configure \
+    CFLAGS="-static" ../configure \
+        --host="${cc_target}" \
         --prefix="${target_dir}"
 
     make
@@ -208,7 +223,8 @@ if has_quirk "build_own_libtool"; then
     apply_patches "${libtool_url}"
 
     mkdirp build
-    ../configure \
+    CFLAGS="-static" ../configure \
+        --host="${cc_target}" \
         --prefix="${target_dir}"
 
     make
@@ -217,5 +233,7 @@ fi
 
 # Mark stage finished
 {
+    find "${target_dir}" -perm 755 '!' -type d '!' -name '*.la' -exec strip --strip-debug {} ';'
+    export PATH="${__oldpath}"
     date +%s > "${target_dir}/.finished"
 }
