@@ -165,6 +165,8 @@ fetch "${mpc_url}"
         --disable-multilib \
         --disable-nls \
         --disable-werror \
+        --enable-default-pie \
+        --enable-default-ssp \
         --enable-languages=c,c++ \
         --enable-tls \
         --with-local-prefix="${target_dir}/include" \
