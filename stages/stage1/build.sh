@@ -22,7 +22,8 @@ fetch "${openrc_url}"
 # Prepare stage0 rootfs
 {
     build_dir="$(create_tmp "base")"
-    tar -C "${target_dir}" -xvf "$(get_stage_archive "stage0")"
+    inform "Unpacking stage0"
+    tar -C "${target_dir}" -xf "$(get_stage_archive "stage0")"
 
     # Build stuff in musl_root environment
     if ! has_quirk "unisolated_stage_build"; then
