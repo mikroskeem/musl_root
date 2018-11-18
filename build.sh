@@ -4,6 +4,7 @@ set -e
 
 . ./config.sh
 . scripts/config_init.sh
+. scripts/colors.sh
 . scripts/prereqs.sh
 . scripts/sources.sh
 . scripts/stages.sh
@@ -20,17 +21,17 @@ export PATH="${tools_dir}/bin:${PATH}"
 
 # Build tools if necessary
 if [ ! -f "${tools_dir}/.finished" ]; then
-    echo ">>> Building tools"
+    state "Building tools"
     . stages/tools/build.sh
 
     cd "${root_dir}"
     copy_stage
 
-    echo ">>> tools built"
+    state "${_cgreen}stage1${_cnormal} built"
 fi
 
 if should_build_stage "stage0"; then
-    echo ">>> Building stage0"
+    state "Building ${_cgreen}stage0${_cnormal}"
     . stages/stage0/build.sh
 
     cd "${root_dir}"
@@ -41,7 +42,7 @@ fi
 export PATH="${_oldpath}"
 
 if should_build_stage "stage1"; then
-    echo ">>> Building stage1"
+    state "Building ${_cgreen}stage1${_cnormal}"
     . stages/stage1/build.sh
 
     cd "${root_dir}"
@@ -52,7 +53,7 @@ fi
 exit 0
 
 if should_build_stage "stage2"; then
-    echo ">>> Building stage2"
+    state "Building ${_cgreen}stage2${_cnormal}"
     . stages/stage2/build.sh
 
     cd "${root_dir}"

@@ -41,7 +41,7 @@ _run_native () {
 host_quirks=""
 tools_available="YES"
 
-echo ">>> Checking available host tools..."
+inform "Checking available host tools..."
 
 check_command "basename" || { tools_available=NO; }
 check_command "grep" || { tools_available=NO; }
@@ -73,39 +73,39 @@ else
     )"
 
     if [ ! "${_bwrap_works}" = "YES" ]; then
-        echo ">>> bubblewrap didn't seem to work, falling back to chroot"
+        warning "bubblewrap didn't seem to work, falling back to chroot"
         host_quirks="${host_quirks}unisolated_stage_build ";
         check_command "chroot" || { tools_available=NO; }
     fi
 fi
 
 check_command "m4" s || {
-    echo ">>> Building own M4 as host does not provide it"
+    warning "Building own M4 as host does not provide it"
     host_quirks="${host_quirks}build_own_m4 "
 }
 
 check_command "libtool" s || {
-    echo ">>> Building own libtool as host does not provide it"
+    warning "Building own libtool as host does not provide it"
     host_quirks="${host_quirks}build_own_libtool "
 }
 
 check_command "xz" s || {
     if [ "${compress_stages}" = "YES" ]; then
-        echo "Disabling compression, xz not found in PATH=${PATH}"
+        warning "Disabling compression, xz not found in PATH=${PATH}"
         compress_stages=NO
     fi
 }
 
-echo ">>> Checking available host libraries..."
+inform "Checking available host libraries..."
 # None right now
 
 if [ ! "${tools_available}" = "YES" ]; then
-    echo ">>> Please install required tools listed above and run this script again"
+    error "Please install required tools listed above and run this script again"
     exit 1
 fi
 
 if [ ! -z "${host_quirks}" ]; then
-    echo ">>> Host quirks: ${host_quirks}"
+    note ">>> Host quirks: ${host_quirks}"
 fi
 
 unset tools_available

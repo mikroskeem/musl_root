@@ -7,10 +7,10 @@ handle_argument () {
         "clean")
             rm "${root_dir}/stages/built.txt" >/dev/null || true
 
-            echo ">>> Removing built stage tarballs"
+            inform "Removing built stage tarballs"
             find "${root_dir}/stages" -type f -name "finished.tar*" -print -delete || true
 
-            echo ">>> Removing '${root_dir}/tmp'"
+            inform "Removing '${root_dir}/tmp'"
             rm -rf "${root_dir}/tmp" >/dev/null || true
             mkdir -p "${root_dir}/tmp"
             ;;
@@ -18,7 +18,7 @@ handle_argument () {
             exit 0
             ;;
         *)
-            echo ">>> Unknown argument: '${1}'"
+            warning "Unknown argument: '${1}'"
             exit 1
             ;;
     esac

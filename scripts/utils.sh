@@ -37,7 +37,7 @@ fetch () {
         fi
     fi
 
-    echo ">>> Downloading '${name}'"
+    inform "Downloading '${name}'"
     eval "${_dl_tool}"
     return "${?}"
 }
@@ -47,7 +47,7 @@ unpack () {
     name="$(basename "${2}")"
     file="${sources}/${name}"
 
-    echo ">>> Unpacking '${name}'"
+    inform "Unpacking '${name}'"
     tar -C "${1}" -xf "${file}" || return "${?}"
 }
 
@@ -63,7 +63,7 @@ apply_patches () {
     name="${name%%.tar*}"
 
     if [ -d "${patches}/${name}" ]; then
-        echo ">>> Applying patches for '${name}'"
+        inform "Applying patches for '${name}'"
         find "${patches}/${name}" -mindepth 1 -maxdepth 1 -name "*.patch" | while read -r _p; do
             # Check if patch should be applied
             quirks="$(grep '^!quirk: ' "${_p}" | sed '/^!quirk: /{s///g}') || true)"
@@ -77,7 +77,7 @@ apply_patches () {
             done
 
             if [ "${_should_apply}" = "YES" ]; then
-                echo ">>> Applying patch: $(basename "${_p}")"
+                inform "Applying patch: $(basename "${_p}")"
                 patch -p1 < "${_p}" || return "${?}"
             fi
         done
