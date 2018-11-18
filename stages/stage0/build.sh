@@ -297,5 +297,5 @@ fi
     }
 
     # Symlink cc to gcc
-    ln -s gcc "${target_dir}/usr/bin/cc"
+    ln -s gcc "${target_dir}/tools/bin/cc"
 }
