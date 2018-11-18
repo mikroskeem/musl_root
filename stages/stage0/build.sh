@@ -12,6 +12,7 @@ _target=""
 # Fetch sources
 fetch "${busybox_url}"
 fetch "${musl_url}"
+fetch "${m4_url}"
 fetch "${make_url}"
 fetch "${libtool_url}"
 fetch "${pkg_config_url}"
