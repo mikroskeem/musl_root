@@ -3,25 +3,16 @@
 #
 
 # creates stage build directory
-_create_tmp () {
-    _t=","
-    while (printf '%s' "${_t}" | grep -q ','); do
-        _t="$(mktemp -d "${1}")"
-    done
-    printf '%s' "${_t}"
-
-}
-
 create_build_tmp () {
-    _create_tmp "${tmpbuilds}.${current_stage}.XXXXXX"
+    mktemp -d "${tmpbuilds}.${current_stage}.XXXXXX"
 }
 
 # directory (middle) suffix
 create_tmp () {
     if [ "${use_tmp}" = "YES" ] && [ ! "${2}" = "DISK" ]; then
-        _create_tmp "${TMPDIR:-/tmp}/muslroot-${1}.XXXXXX"
+        mktemp -d "${TMPDIR:-/tmp}/muslroot-${1}.XXXXXX"
     else
-        _create_tmp "${root_dir}/tmp/muslroot-${1}.XXXXXX"
+        mktemp -d "${root_dir}/tmp/muslroot-${1}.XXXXXX"
     fi
 }
 
