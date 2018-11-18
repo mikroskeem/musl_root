@@ -12,6 +12,7 @@ handle_argument () {
 
             echo ">>> Removing '${root_dir}/tmp'"
             rm -rf "${root_dir}/tmp" >/dev/null || true
+            mkdir -p "${root_dir}/tmp"
             ;;
         "exit")
             exit 0
