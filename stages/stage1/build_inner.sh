@@ -137,3 +137,15 @@ chmod 755 /usr/bin/ldconfig
     make
     make install
 }
+
+# Build openrc
+{
+    build_dir="$(create_tmp "openrc")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${openrc_url}"
+    cd openrc-"${openrc_version}"
+    apply_patches "${openrc_url}"
+
+    make BRANDING="musl_root"
+}

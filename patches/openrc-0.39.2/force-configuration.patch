@@ -1,0 +1,51 @@
+--- a/mk/sys.mk	2018-11-10 03:33:17.009526366 +0200
++++ b/mk/sys.mk	2018-11-10 03:33:52.383385470 +0200
+@@ -31,17 +31,17 @@
+ 
+ PICFLAG?=		-fPIC
+ 
+-SYSCONFDIR?=		${PREFIX}/etc
++SYSCONFDIR?=		/etc
+ INITDIR?=		${SYSCONFDIR}/init.d
+ CONFDIR?=		${SYSCONFDIR}/conf.d
+ CONFMODE?=		0644
+ LOCALDIR?=		${SYSCONFDIR}/local.d
+ SYSCTLDIR?=		${SYSCONFDIR}/sysctl.d
+ 
+-BINDIR?=		${PREFIX}/bin
++BINDIR?=		/usr/bin
+ BINMODE?=		0755
+ 
+-SBINDIR?=		${PREFIX}/sbin
++SBINDIR?=		/usr/bin
+ SBINMODE?=		0755
+ 
+ INCDIR?=		${UPREFIX}/include
+@@ -50,11 +50,11 @@
+ _LIBNAME_SH=		case `readlink /lib` in /lib64|lib64) echo "lib64";; *) echo "lib";; esac
+ _LIBNAME:=		$(shell ${_LIBNAME_SH})
+ LIBNAME?=		${_LIBNAME}
+-LIBDIR?=		${UPREFIX}/${LIBNAME}
++LIBDIR?=		/usr/lib
+ LIBMODE?=		0644
+-SHLIBDIR?=		${PREFIX}/${LIBNAME}
++SHLIBDIR?=		/usr/lib
+ 
+-LIBEXECDIR?=		${PREFIX}/libexec/rc
++LIBEXECDIR?=		/usr/lib/openrc
+ 
+ MANPREFIX?=		${UPREFIX}/share
+ MANDIR?=		${MANPREFIX}/man
+--- src/rc/Makefile.orig	2018-11-10 03:37:59.607062743 +0200
++++ src/rc/Makefile	2018-11-10 03:38:24.840771628 +0200
+@@ -19,8 +19,8 @@
+ 
+ CLEANFILES=	version.h rc-selinux.o
+ 
+-BINDIR=		${PREFIX}/bin
+-SBINDIR=	${PREFIX}/sbin
++BINDIR=		/usr/bin
++SBINDIR=  /usr/bin
+ LINKDIR=	${LIBEXECDIR}
+ 
+ BINPROGS=	rc-status

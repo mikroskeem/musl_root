@@ -26,6 +26,7 @@ mksh_version="R56c"
 libressl_version="2.8.2"
 zlib_version="1.2.11"
 curl_version="7.62.0"
+openrc_version="0.39.2"
 
 # All urls
 busybox_url="https://busybox.net/downloads/busybox-${busybox_version}.tar.bz2"
@@ -46,3 +47,4 @@ mksh_url="https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-${mksh_version}.tgz"
 libressl_url="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${libressl_version}.tar.gz"
 curl_url="https://curl.haxx.se/download/curl-${curl_version}.tar.gz"
 zlib_url="https://zlib.net/zlib-${zlib_version}.tar.gz"
+openrc_url="https://github.com/OpenRC/openrc/archive/${openrc_version}.tar.gz"
