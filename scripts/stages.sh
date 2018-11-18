@@ -14,11 +14,11 @@ should_build_stage () {
 
 stage_built () {
     echo "${current_stage}" >> "${root_dir}"/stages/built.txt
-    state "Stage '${_cgreen}${current_stage}${_cnormal}' built"
+    status "Stage '${_cgreen}${current_stage}${_cnormal}' built"
 }
 
 copy_stage () {
-    state "Copying built stage"
+    status "Copying built stage"
 
     _xz="xz ${XZ_FLAGS}"
     if [ "${compress_stages}" = "YES" ]; then
@@ -30,7 +30,7 @@ copy_stage () {
             > "${root_dir}"/stages/"${current_stage}"/finished.tar || return 1
     fi
 
-    state "Done"
+    status "Done"
 }
 
 get_stage_archive () {
