@@ -1,0 +1,12 @@
+--- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm
++++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm
+@@ -234,7 +234,8 @@
+ sub eval_in_subdirs {
+     my($self) = @_;
+     use Cwd qw(cwd abs_path);
+-    my $pwd = cwd() || die "Can't figure out your cwd!";
++    my $pwd = `pwd`;
++    chomp $pwd;
+ 
+     local @INC = map eval {abs_path($_) if -e} || $_, @INC;
+     push @INC, '.';     # '.' has to always be at the end of @INC
