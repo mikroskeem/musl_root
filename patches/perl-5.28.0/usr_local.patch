@@ -1,23 +1,7 @@
-From 1b9950c255b7d5f13b8c65bde26151908f30fc10 Mon Sep 17 00:00:00 2001
-From: Vladimir Smirnov <civil@gentoo.org>
-Date: Mon, 19 May 2014 19:58:00 +0400
-Subject: [PATCH] Remove /usr/local paths
-
-remove /usr/local paths from all stuff thats used
-in Configure script
-
-Patch-Name: gentoo/usr_local.diff
-Original-By: Torsten Veller <tove@gentoo.org>
----
- Configure | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
-
-diff --git a/Configure b/Configure
-index 63b8848..d0a3c28 100755
---- a/Configure
-+++ b/Configure
-@@ -1315,8 +1315,7 @@ archobjs=''
- archname=''
+--- perl-5.28.0/Configure.orig	2018-05-21 15:29:23.000000000 +0300
++++ perl-5.28.0/Configure	2018-11-19 13:45:03.650885176 +0200
+@@ -1427,8 +1427,7 @@
+ i_whoami=''
  : Possible local include directories to search.
  : Set locincpth to "" in a hint file to defeat local include searches.
 -locincpth="/usr/local/include /opt/local/include /usr/gnu/include"
@@ -26,7 +10,7 @@ index 63b8848..d0a3c28 100755
  :
  : no include file wanted by default
  inclwanted=''
-@@ -1329,12 +1328,11 @@ libnames=''
+@@ -1444,12 +1443,11 @@
  : change the next line if compiling for Xenix/286 on Xenix/386
  xlibpth='/usr/lib/386 /lib/386'
  : Possible local library directories to search.
@@ -41,7 +25,7 @@ index 63b8848..d0a3c28 100755
  test -f /usr/shlib/libc.so && glibpth="/usr/shlib $glibpth"
  test -f /shlib/libc.so     && glibpth="/shlib $glibpth"
  test -d /usr/lib64         && glibpth="$glibpth /lib64 /usr/lib64 /usr/local/lib64"
-@@ -4914,7 +4912,7 @@ esac
+@@ -5034,7 +5032,7 @@
  : Set private lib path
  case "$plibpth" in
  '') if ./mips; then
@@ -50,7 +34,7 @@ index 63b8848..d0a3c28 100755
      fi;;
  esac
  case "$libpth" in
-@@ -20513,7 +20511,7 @@ else
+@@ -21422,7 +21420,7 @@
  	case "$ranlib" in
  	:) ranlib='';;
  	'')
@@ -59,6 +43,3 @@ index 63b8848..d0a3c28 100755
  		$test -f $ranlib || ranlib=''
  		;;
  	esac
--- 
-1.9.3
-
