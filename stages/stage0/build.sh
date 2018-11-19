@@ -196,8 +196,8 @@ fi
     cd "${build_dir}"
 
     unpack "${build_dir}" "${musl_url}"
-    apply_patches "${musl_url}"
     cd musl-"${musl_version}"
+    apply_patches "${musl_url}"
 
     mkdirp build
     ../configure \
