@@ -62,6 +62,51 @@ chmod 755 /usr/bin/ldconfig
         echo "${PREFIX}"/bin/mksh >> /etc/shells
 }
 
+# Build perl
+{
+    build_dir="$(create_tmp "perl")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${perl_url}"
+    cd perl-"${perl_version}"
+    apply_patches "${perl_version}"
+
+    oldcfl="${CFLAGS}"
+    oldldf="${LDFLAGS}"
+    oldmf="${MAKEFLAGS}"
+
+    export LDFLAGS="-pthread ${LDFLAGS}"
+    export CFLAGS="-D_GNU_SOURCE -DNO_POSIX_2008_LOCALE ${CFLAGS}"
+    export MAKEFLAGS="$(printf '%s' "${MAKEFLAGS}" | sed 's/-j[0-9].* //g')"
+
+    ./configure.gnu \
+        -Dusethreads -Duseshrplib -Dusesoname -Dusevendorprefix \
+        -Dprefix=/usr -Dvendorprefix=/usr \
+        -Dprivlib=/usr/share/perl5/core_perl \
+        -Darchlib=/usr/lib/perl5/core_perl \
+        -Dsitelib=/usr/share/perl5/site_perl \
+        -Dsitearch=/usr/lib/perl5/site_perl \
+        -Dvendorlib=/usr/share/perl5/vendor_perl \
+        -Dvendorarch=/usr/lib/perl5/vendor_perl \
+        -Dscriptdir=/usr/bin -Dvendorscript=/usr/bin \
+        -Dinc_version_list=none -Dman1ext=1p -Dman3ext=3p \
+        -Dman1dir=/usr/share/man/man1 \
+        -Dman3dir=/usr/share/man/man3 \
+        -Dd_sockaddr_in6=define \
+        -Dcccdlflags="-fPIC" \
+        -Doptimize=" -Wall ${CFLAGS} " -Dccflags=" ${CFLAGS} " \
+        -Dlddlflags="-shared ${LDFLAGS}" -Dldflags="${LDFLAGS}" \
+        -Dperl_static_inline='static __inline__' -Dd_static_inline
+
+     make
+     make install
+
+     # Restore old env variables
+     export CFLAGS="${oldcfl}"
+     export LDFLAGS="${oldldf}"
+     export MAKEFLAGS="${oldmf}"
+}
+
 # Build libressl
 {
     build_dir="$(create_tmp "libressl")"

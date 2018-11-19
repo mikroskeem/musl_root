@@ -14,6 +14,7 @@ fetch "${pkg_config_url}"
 
 fetch "${libexecinfo_url}"
 fetch "${mksh_url}"
+fetch "${perl_url}"
 fetch "${libressl_url}"
 fetch "${curl_url}"
 fetch "${zlib_url}"
