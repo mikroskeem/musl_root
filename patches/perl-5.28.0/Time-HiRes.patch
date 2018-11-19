@@ -1,5 +1,5 @@
---- dist/Time-HiRes/Makefile.PL.orig
-+++ dist/Time-HiRes/Makefile.PL
+--- a/dist/Time-HiRes/Makefile.PL.orig
++++ b/dist/Time-HiRes/Makefile.PL
 @@ -603,6 +603,7 @@
      my $has_clock_gettime_emulation;
      if (exists $Config{d_clock_gettime}) {

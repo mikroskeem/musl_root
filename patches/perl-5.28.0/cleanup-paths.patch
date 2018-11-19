@@ -14,8 +14,8 @@ Original-By: Torsten Veller <tove@gentoo.org>
 
 diff --git a/Configure b/Configure
 index b221390..63b8848 100755
---- Configure
-+++ Configure
+--- a/Configure
++++ b/Configure
 @@ -107,28 +107,6 @@
  	fi
  fi
