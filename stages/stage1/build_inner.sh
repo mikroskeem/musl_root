@@ -69,7 +69,7 @@ chmod 755 /usr/bin/ldconfig
 
     unpack "${build_dir}" "${perl_url}"
     cd perl-"${perl_version}"
-    apply_patches "${perl_version}"
+    apply_patches "${perl_url}"
 
     oldcfl="${CFLAGS}"
     oldldf="${LDFLAGS}"
