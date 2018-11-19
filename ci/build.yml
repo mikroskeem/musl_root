@@ -13,3 +13,6 @@ inputs:
 
 run:
   path: musl_root/ci/build.sh
+
+caches:
+- path: musl_root/sources
