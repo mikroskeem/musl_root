@@ -1,7 +1,11 @@
 __ttput="x"
 __tput () {
     if [ "${__ttput}" = "x" ]; then
-        __ttput="$(command -v tput || printf '%s' 'true')"
+        if [ -z "${TERM}" ]; then
+            __ttput="true"
+        else
+            __ttput="$(command -v tput || printf '%s' 'true')"
+        fi
     fi
 
     "${__ttput}" "${@}"
