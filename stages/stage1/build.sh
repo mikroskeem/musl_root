@@ -12,7 +12,6 @@ fetch "${make_url}"
 fetch "${libtool_url}"
 
 fetch "${libexecinfo_url}"
-fetch "${mksh_url}"
 fetch "${perl_url}"
 fetch "${libressl_url}"
 fetch "${libz_url}"

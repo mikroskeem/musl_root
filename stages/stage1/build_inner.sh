@@ -34,34 +34,6 @@ chmod 755 /usr/bin/ldconfig
     make DESTDIR="/usr" install
 }
 
-# Build mksh
-{
-    build_dir="$(create_tmp "mksh")"
-    cd "${build_dir}"
-
-    unpack "${build_dir}" "${mksh_url}"
-    cd mksh
-    apply_patches "${mksh_url}"
-
-    sh ./Build.sh -j
-
-    PREFIX="/usr"
-
-    # Create directory structure
-    install -d "${PREFIX}"/bin
-    install -d /usr/share/doc/mksh/examples/
-
-    # Copy files
-    install -s -m 555 mksh "${PREFIX}"/bin/mksh
-    install -m 444 dot.mkshrc /usr/share/doc/mksh/examples/
-
-    # Symlink /usr/bin/sh to /usr/bin/mksh
-    ln -sf "${PREFIX}"/bin/mksh "${PREFIX}"/bin/sh
-
-    grep -x "${PREFIX}"/bin/mksh /etc/shells > /dev/null || \
-        echo "${PREFIX}"/bin/mksh >> /etc/shells
-}
-
 # Build perl
 {
     build_dir="$(create_tmp "perl")"
@@ -424,6 +396,12 @@ EOF
 
     make
     make install
+
+    # Symlink sh to bash
+    ln -sf bash /usr/bin/sh
+
+    grep -q -x /usr/bin/bash /etc/shells || \
+        echo /usr/bin/bash >> /etc/shells
 }
 
 # Build pacman
