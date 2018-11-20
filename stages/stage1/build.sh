@@ -17,7 +17,7 @@ fetch "${mksh_url}"
 fetch "${perl_url}"
 fetch "${libressl_url}"
 fetch "${curl_url}"
-fetch "${zlib_url}"
+fetch "${libz_url}"
 fetch "${openrc_url}"
 
 # Prepare stage0 rootfs

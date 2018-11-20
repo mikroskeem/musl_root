@@ -125,14 +125,14 @@ chmod 755 /usr/bin/ldconfig
     make install
 }
 
-# Build zlib
+# Build libz
 {
-    build_dir="$(create_tmp "zlib")"
+    build_dir="$(create_tmp "libz")"
     cd "${build_dir}"
 
-    unpack "${build_dir}" "${zlib_url}"
-    cd zlib-"${zlib_version}"
-    apply_patches "${zlib_url}"
+    unpack "${build_dir}" "${libz_url}"
+    cd libz-"${libz_version}"
+    apply_patches "${libz_url}"
 
     mkdirp build
     ../configure \
