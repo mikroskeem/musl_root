@@ -3,3 +3,5 @@
 /stages/*/finished.tar*
 /sources/
 /tools/
+
+/patches/bash-4.4/*.diff

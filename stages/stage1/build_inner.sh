@@ -79,7 +79,7 @@ chmod 755 /usr/bin/ldconfig
     export CFLAGS="-D_GNU_SOURCE -DNO_POSIX_2008_LOCALE ${CFLAGS}"
     export MAKEFLAGS="$(printf '%s' "${MAKEFLAGS}" | sed 's/-j[0-9].* //g')"
 
-    ./configure.gnu \
+    ./Configure -des \
         -Dusethreads -Duseshrplib -Dusesoname -Dusevendorprefix \
         -Dprefix=/usr -Dvendorprefix=/usr \
         -Dprivlib=/usr/share/perl5/core_perl \
@@ -98,8 +98,8 @@ chmod 755 /usr/bin/ldconfig
         -Dlddlflags="-shared ${LDFLAGS}" -Dldflags="${LDFLAGS}" \
         -Dperl_static_inline='static __inline__' -Dd_static_inline
 
-     make
-     make install
+    make
+    make install
 
      # Restore old env variables
      export CFLAGS="${oldcfl}"
@@ -137,6 +137,312 @@ chmod 755 /usr/bin/ldconfig
     mkdirp build
     ../configure \
         --prefix=/usr
+
+    make
+    make install
+}
+
+# Build gawk
+{
+    build_dir="$(create_tmp "gawk")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${gawk_url}"
+    cd gawk-"${gawk_version}"
+    apply_patches "${gawk_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --disable-nls
+
+    make
+    make install
+}
+
+# Build sed
+{
+    build_dir="$(create_tmp "sed")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${sed_url}"
+    cd sed-"${sed_version}"
+    apply_patches "${sed_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr \
+        --disable-i18n \
+        --disable-nls
+
+    make
+    make install
+}
+
+# Build bison
+{
+    build_dir="$(create_tmp "bison")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${bison_url}"
+    cd bison-"${bison_version}"
+    apply_patches "${bison_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr \
+        --disable-nls
+
+    make
+    make install
+}
+
+# Build flex
+{
+    build_dir="$(create_tmp "flex")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${flex_url}"
+    cd flex-"${flex_version}"
+    apply_patches "${flex_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr \
+        --disable-nls
+
+    make
+    make install
+}
+
+# Build autoconf
+{
+    build_dir="$(create_tmp "autoconf")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${autoconf_url}"
+    cd autoconf-"${autoconf_version}"
+    apply_patches "${autoconf_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr
+
+    make
+    make install
+}
+
+# Build automake
+{
+    build_dir="$(create_tmp "automake")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${automake_url}"
+    cd automake-"${automake_version}"
+    apply_patches "${automake_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr
+
+    make
+    make install
+}
+
+# Build pkgconf
+{
+    build_dir="$(create_tmp "pkgconf")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${pkgconf_url}"
+    cd pkgconf-"${pkgconf_version}"
+    apply_patches "${pkgconf_url}"
+
+    _pcdirs=/usr/lib/pkgconfig:/usr/share/pkgconfig
+    _libdir=/usr/lib
+    _includedir=/usr/include
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --with-pkg-config-dir="${_pcdirs}" \
+        --with-system-libdir="${_libdir}" \
+        --with-system-includedir="${_includedir}"
+
+    make
+    make install
+
+    # Install pkg-config compatibility script
+    # https://git.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/pkgconf#n55
+    install -D /dev/stdin "/usr/bin/$(uname -m)-pkg-config" <<EOF
+#!/bin/sh
+
+# Simple wrapper to tell pkgconf to behave as a platform-specific version of pkg-config
+# Platform: $(uname -m)-unknown-linux-musl
+
+: \${PKG_CONFIG_LIBDIR=${_pcdirs}}
+: \${PKG_CONFIG_SYSTEM_LIBRARY_PATH=${_libdir}}
+: \${PKG_CONFIG_SYSTEM_INCLUDE_PATH=${_includedir}}
+export PKG_CONFIG_LIBDIR PKG_CONFIG_SYSTEM_LIBRARY_PATH PKG_CONFIG_SYSTEM_INCLUDE_PATH
+
+exec pkgconf "\$@"
+EOF
+
+    ln -s "$(uname -m)-pkg-config" "/usr/bin/pkg-config"
+}
+
+# Build xz
+{
+    build_dir="$(create_tmp "xz")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${xz_url}"
+    cd xz-"${xz_version}"
+    apply_patches "${xz_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr \
+        --disable-nls
+
+    make
+    make install
+}
+
+# Build libarchive
+{
+    build_dir="$(create_tmp "libarchive")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${libarchive_url}"
+    cd libarchive-"${libarchive_version}"
+    apply_patches "${libarchive_url}"
+
+    mkdirp _build
+    ../configure \
+        --prefix=/usr
+
+    make
+    make install
+}
+
+# Build netbsd-curses
+{
+    build_dir="$(create_tmp "netbsd-curses")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${netbsd_curses_url}"
+    cd netbsd-curses-"${netbsd_curses_version}"
+    apply_patches "${netbsd_curses_url}"
+
+    make \
+        PREFIX=/usr \
+        CFLAGS="${CFLAGS} -fPIC"
+
+    make PREFIX=/usr install
+}
+
+# Build libedit
+{
+    build_dir="$(create_tmp "libedit")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${libedit_url}"
+    cd libedit-"${libedit_version}"
+    apply_patches "${libedit_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr
+
+    make
+    make install
+}
+
+# Build pcre
+{
+    build_dir="$(create_tmp "pcre")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${pcre_url}"
+    cd pcre-"${pcre_version}"
+    apply_patches "${pcre_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr \
+        --disable-cpp \
+        --enable-utf8 \
+        --enable-jit \
+        --enable-pcretest-libedit \
+        --enable-pcregrep-libz
+
+    make
+    make install
+}
+
+# Build grep
+{
+    build_dir="$(create_tmp "grep")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${grep_url}"
+    cd grep-"${grep_version}"
+    apply_patches "${grep_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr \
+        --disable-nls
+
+    make
+    make install
+}
+
+# Build bash
+{
+    build_dir="$(create_tmp "bash")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${bash_url}"
+    cd bash-"${bash_version}"
+
+    # Apply incremental patches first
+    find "/musl_root/patches/bash-${bash_version}" -type f -name "bash*.diff" -exec patch -p0 -i {} ';'
+
+    apply_patches "${bash_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr \
+        --disable-nls \
+        --without-bash-malloc
+
+    # TODO: not compatible with libedit and netbsd-curses?
+
+    make
+    make install
+}
+
+# Build pacman
+{
+    build_dir="$(create_tmp "pacman")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${pacman_url}"
+    cd pacman-"${pacman_version}"
+    apply_patches "${pacman_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr \
+        --disable-nls \
+        --sysconfdir=/etc \
+        --localstatedir=/var \
+        --with-scriptlet-shell=/usr/bin/bash \
+        --with-ldconfig=/usr/bin/ldconfig
 
     make
     make install

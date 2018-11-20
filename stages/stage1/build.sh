@@ -10,15 +10,37 @@ target_dir="$(create_build_tmp)"
 fetch "${busybox_url}"
 fetch "${make_url}"
 fetch "${libtool_url}"
-fetch "${pkg_config_url}"
 
 fetch "${libexecinfo_url}"
 fetch "${mksh_url}"
 fetch "${perl_url}"
 fetch "${libressl_url}"
-fetch "${curl_url}"
 fetch "${libz_url}"
+fetch "${gawk_url}"
+fetch "${sed_url}"
+fetch "${bison_url}"
+fetch "${flex_url}"
+fetch "${automake_url}"
+fetch "${autoconf_url}"
+fetch "${xz_url}"
+fetch "${libarchive_url}"
+fetch "${netbsd_curses_url}"
+fetch "${libedit_url}"
+fetch "${pcre_url}"
+fetch "${grep_url}"
+fetch "${bash_url}"
+fetch "${pacman_url}"
+fetch "${curl_url}"
+fetch "${pkgconf_url}"
 fetch "${openrc_url}"
+
+# Fetch bash incremental patches
+{
+    _oldpwd="$(pwd)"
+    cd "${root_dir}/patches/bash-${bash_version}" || exit 1
+    bash fetch-incr.sh "${bash_version}" "${_bash_patchlevel}"
+    cd "${_oldpwd}" || exit 1
+}
 
 # Prepare stage0 rootfs
 {
