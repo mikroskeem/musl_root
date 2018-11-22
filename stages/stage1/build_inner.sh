@@ -382,7 +382,7 @@ EOF
     apply_patches "${coreutils_url}"
 
     mkdirp build
-    ../configure \
+    FORCE_UNSAFE_CONFIGURE=1 ../configure \
         --prefix=/usr \
         --disable-nls
 
