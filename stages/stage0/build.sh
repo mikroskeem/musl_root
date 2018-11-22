@@ -288,8 +288,8 @@ fi
         --enable-languages=c,c++ \
         --enable-tls
 
-    make all-gcc all-target-libgcc
-    make DESTDIR="${target_dir}" install-gcc install-target-libgcc
+    make
+    make DESTDIR="${target_dir}" install
 
     # Check if GCC built properly
     [ ! -f "${target_dir}/tools/bin/${cc_target}-gcc" ] && {
