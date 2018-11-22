@@ -48,6 +48,14 @@ cc_target="$(uname -m)-unknown-linux-musl"
 
     # Symlink busybox sh as default shell
     ln -s /tools/bin/busybox "${target_dir}"/usr/bin/sh
+
+    # Symlink /etc/mtab
+    ln -s /proc/mounts "${target_dir}"/etc/mtab
+
+    # Create dummy passwd, group and shadow with minimal amount of users
+    printf "root:x:0:0::/root:/bin/sh\\nnobody:x:65534:65534::/:/bin/false\\n" | install -m 644 /dev/stdin "${target_dir}"/etc/passwd
+    printf "root:x:0:\\nnogroup:x:65534:\\n" | install -m 644 /dev/stdin "${target_dir}"/etc/group
+    printf "root:!!:17740::::::\\nnobody:!!:17740::::::\\n" | install -m 600 /dev/stdin "${target_dir}"/etc/shadow
 }
 
 # Build busybox
