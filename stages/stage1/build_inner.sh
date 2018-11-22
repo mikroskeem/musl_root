@@ -345,7 +345,6 @@ EOF
     mkdirp build
     ../configure \
         --prefix=/usr \
-        --disable-cpp \
         --enable-utf8 \
         --enable-jit \
         --enable-pcretest-libedit \
