@@ -372,6 +372,24 @@ EOF
     make install
 }
 
+# Build coreutils
+{
+    build_dir="$(create_tmp "coreutils")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${coreutils_url}"
+    cd coreutils-"${coreutils_version}"
+    apply_patches "${coreutils_url}"
+
+    mkdirp build
+    ../configure \
+        --prefix=/usr \
+        --disable-nls
+
+    make
+    make install
+}
+
 # Build bash
 {
     build_dir="$(create_tmp "bash")"
