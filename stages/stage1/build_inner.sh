@@ -495,3 +495,19 @@ EOF
 
     make BRANDING="musl_root"
 }
+
+# Final steps
+{
+    # Configure pacman and makepkg
+    sed -i '/^#XferCommand = .*curl/{s/^#//}' /etc/pacman.conf
+    sed -i '/^#Color/{s/^#//}' /etc/pacman.conf
+    sed -i '/^#VerbosePkgLists/{s/^#//}' /etc/pacman.conf
+
+    sed -i "/^CHOST/{s/.*/CHOST=\"$(uname -m)-unknown-linux-musl\"/}" /etc/makepkg.conf
+    sed -i "/^PKGEXT/{s/.*/PKGEXT='.pkg.tar.xz'/}" /etc/makepkg.conf
+    sed -i "/^SRCEXT/{s/.*/SRCEXT='.src.tar.xz'/}" /etc/makepkg.conf
+    sed -i "/^INTEGRITY_CHECK=.*/{s/(.*/(sha256)/}" /etc/makepkg.conf
+
+    # Set up /etc/profile
+    printf "PATH=/usr/bin:/tools/bin\\nexport PATH\\n" | install -m 644 /dev/stdin /etc/profile
+}
