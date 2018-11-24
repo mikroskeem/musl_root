@@ -8,7 +8,7 @@
 # Stage 0:
 busybox_version="1.29.3"
 musl_version="1.1.20"
-linux_kernel_version="4.19.2"
+linux_kernel_version="4.19.4"
 
 make_version="4.2.1"
 m4_version="1.4.18"
