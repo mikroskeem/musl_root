@@ -496,6 +496,30 @@ EOF
     make BRANDING="musl_root"
 }
 
+# Build fakeroot
+{
+    build_dir="$(create_tmp "fakeroot")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${fakeroot_url}"
+    cd fakeroot-"${fakeroot_version}"
+    apply_patches "${fakeroot_url}"
+
+    ./configure \
+        --prefix=/usr \
+        --disable-static \
+        --with-ipc=tcp
+
+    make
+
+    for l in de es fr nl pt sv; do
+        touch "doc/${l}/faked.1"
+        touch "doc/${l}/fakeroot.1"
+    done
+
+    make install
+}
+
 # Final steps
 {
     # Configure pacman and makepkg

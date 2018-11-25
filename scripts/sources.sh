@@ -46,6 +46,7 @@ libz_version="1.2.8.2015.12.26"
 curl_version="7.62.0"
 pkgconf_version="1.5.4"
 openrc_version="0.39.2"
+fakeroot_version="1.23fixed"
 
 # All urls
 busybox_url="https://busybox.net/downloads/busybox-${busybox_version}.tar.bz2"
@@ -83,3 +84,4 @@ curl_url="https://curl.haxx.se/download/curl-${curl_version}.tar.gz"
 libz_url="https://sortix.org/libz/release/libz-${libz_version}.tar.gz"
 pkgconf_url="https://distfiles.dereferenced.org/pkgconf/pkgconf-${pkgconf_version}.tar.xz"
 openrc_url="openrc-${openrc_version}.tar.gz:https://github.com/OpenRC/openrc/archive/${openrc_version}.tar.gz"
+fakeroot_url="fakeroot-${fakeroot_version}.tar.gz:https://github.com/mikroskeem/fakeroot/archive/${fakeroot_version}.tar.gz"
