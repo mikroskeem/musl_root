@@ -493,6 +493,8 @@ EOF
     cd fakeroot-"${fakeroot_version}"
     apply_patches "${fakeroot_url}"
 
+    libtoolize
+    ./bootstrap
     ./configure \
         --prefix=/usr \
         --disable-static \
