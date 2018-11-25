@@ -56,6 +56,13 @@ cc_target="$(uname -m)-unknown-linux-musl"
     printf "root:x:0:0::/root:/bin/sh\\nnobody:x:65534:65534::/:/bin/false\\n" | install -m 644 /dev/stdin "${target_dir}"/etc/passwd
     printf "root:x:0:\\nnogroup:x:65534:\\n" | install -m 644 /dev/stdin "${target_dir}"/etc/group
     printf "root:!!:17740::::::\\nnobody:!!:17740::::::\\n" | install -m 600 /dev/stdin "${target_dir}"/etc/shadow
+
+    # Create dummy /etc/os-release
+    printf "NAME=Linux\\nID=musl_root\\n" | install -m 644 /dev/stdin "${target_dir}"/etc/os-release
+
+    # Create dummy inittab and set up busybox init
+    printf "console::askfirst:-/bin/sh -l\\n" | install -m 644 /dev/stdin "${target_dir}"/etc/inittab
+    ln -s /tools/bin/busybox "${target_dir}"/usr/bin/init
 }
 
 # Build busybox
