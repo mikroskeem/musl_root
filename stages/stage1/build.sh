@@ -32,7 +32,6 @@ fetch "${bash_url}"
 fetch "${pacman_url}"
 fetch "${curl_url}"
 fetch "${pkgconf_url}"
-fetch "${openrc_url}"
 fetch "${fakeroot_url}"
 
 # Fetch bash incremental patches
