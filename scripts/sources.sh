@@ -45,6 +45,8 @@ libressl_version="2.8.2"
 libz_version="1.2.8.2015.12.26"
 curl_version="7.62.0"
 pkgconf_version="1.5.4"
+attr_version="2.4.48"
+libcap_version="2.26"
 fakeroot_version="1.23fixed"
 
 # All urls
@@ -82,4 +84,6 @@ libressl_url="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${libressl_v
 curl_url="https://curl.haxx.se/download/curl-${curl_version}.tar.gz"
 libz_url="https://sortix.org/libz/release/libz-${libz_version}.tar.gz"
 pkgconf_url="https://distfiles.dereferenced.org/pkgconf/pkgconf-${pkgconf_version}.tar.xz"
+attr_url="https://download.savannah.gnu.org/releases/attr/attr-${attr_version}.tar.gz"
+libcap_url="https://kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-${libcap_version}.tar.xz"
 fakeroot_url="fakeroot-${fakeroot_version}.tar.gz:https://github.com/mikroskeem/fakeroot/archive/${fakeroot_version}.tar.gz"

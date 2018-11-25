@@ -484,6 +484,43 @@ EOF
     make install
 }
 
+# Build attr
+{
+    build_dir="$(create_tmp "attr")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${attr_url}"
+    cd attr-"${attr_version}"
+    apply_patches "${attr_url}"
+
+    ./configure \
+        --libdir=/usr/lib \
+        --libexecdir=/usr/lib \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --disable-gettext
+
+    make
+    make install
+}
+
+# Build libcap
+{
+    build_dir="$(create_tmp "libcap")"
+    cd "${build_dir}"
+
+    unpack "${build_dir}" "${libcap_url}"
+    cd libcap-"${libcap_version}"
+    apply_patches "${libcap_url}"
+
+    sed -i "/SBINDIR/s#sbin#bin#" Make.Rules
+    sed -i "s/CFLAGS :=/CFLAGS += \$(CPPFLAGS) /" Make.Rules
+    sed -i "s/LDFLAGS :=/LDFLAGS +=/" Make.Rules
+
+    make prefix=/usr lib=lib KERNEL_HEADERS=/usr/include
+    make prefix=/usr lib=/lib DESTDIR="${pkgdir}" RAISE_SETFCAP=no install
+}
+
 # Build fakeroot
 {
     build_dir="$(create_tmp "fakeroot")"
