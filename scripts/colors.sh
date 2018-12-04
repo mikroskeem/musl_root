@@ -19,21 +19,21 @@ _cbold="$(__tput bold)"
 _cnormal="$(__tput sgr0)"
 
 status () {
-    echo "${_cbold}>>> ${_cgreen}Status:${_cnormal} ${*}"
+    echo "${_cbold}>>> ${_cgreen}Status:${_cnormal} ${*}" >&2
 }
 
 inform () {
-    echo "${_cbold}>>> ${_cnormal}Info:${_cnormal} ${*}"
+    echo "${_cbold}>>> ${_cnormal}Info:${_cnormal} ${*}" >&2
 }
 
 note () {
-    echo "${_cbold}>>> ${_cblue}Note:${_cnormal} ${*}"
+    echo "${_cbold}>>> ${_cblue}Note:${_cnormal} ${*}" >&2
 }
 
 warning () {
-    echo "${_cbold}>>> ${_cyellow}Warning:${_cnormal} ${*}"
+    echo "${_cbold}>>> ${_cyellow}Warning:${_cnormal} ${*}" >&2
 }
 
 error () {
-    echo "${_cbold}>>> ${_cred}Error:${_cnormal} ${*}"
+    echo "${_cbold}>>> ${_cred}Error:${_cnormal} ${*}" >&2
 }

@@ -22,7 +22,9 @@ export PATH="${tools_dir}/bin:${PATH}"
 # Build tools if necessary
 if [ ! -f "${tools_dir}/.finished" ]; then
     status "Building tools"
-    . stages/tools/build.sh
+    {
+        . stages/tools/build.sh
+    } 1> "$(prepare_logging "tools")" || exit 1
 
     cd "${root_dir}"
     copy_stage
@@ -32,7 +34,9 @@ fi
 
 if should_build_stage "stage0"; then
     status "Building ${_cgreen}stage0${_cnormal}"
-    . stages/stage0/build.sh
+    {
+        . stages/stage0/build.sh
+    } 1> "$(prepare_logging "stage0")" || exit 1
 
     cd "${root_dir}"
     copy_stage || return 1
@@ -43,7 +47,9 @@ export PATH="${_oldpath}"
 
 if should_build_stage "stage1"; then
     status "Building ${_cgreen}stage1${_cnormal}"
-    . stages/stage1/build.sh
+    {
+        . stages/stage1/build.sh
+    } 1> "$(prepare_logging "stage1")" || exit 1
 
     cd "${root_dir}"
     copy_stage || return 1
@@ -54,7 +60,9 @@ exit 0
 
 if should_build_stage "stage2"; then
     status "Building ${_cgreen}stage2${_cnormal}"
-    . stages/stage2/build.sh
+    {
+        . stages/stage2/build.sh
+    } 1> "$(prepare_logging "stage2")" || exit 1
 
     cd "${root_dir}"
     copy_stage || return 1
